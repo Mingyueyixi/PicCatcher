@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">PicCatcher</string>
+    <string name="app_xposed_description">App图片抓取器</string>
+    <string name="module_not_active">模块未激活</string>
+    <string name="module_have_active">模块已激活</string>
+    <string name="module_version">模块版本</string>
+    <string name="donate">捐赠</string>
+    <string name="config_des">使用说明</string>
+    <string name="click_here_to_des">点击此处查看使用说明</string>
+    <string name="donate_description">万水千山总是情，打赏一点也是情</string>
+</resources>

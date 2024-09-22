@@ -1,0 +1,178 @@
+import org.json.JSONObject
+
+import java.text.SimpleDateFormat
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+apply {
+    from rootProject.file('props.gradle')
+}
+def buildInfoJson = {
+    def p = "git branch --show-current".execute()
+    //当前分支
+    def currentBranch = p.text.trim()
+    p.destroy()
+    //最后1个提交ID
+    p = "git rev-parse HEAD".execute()
+    def lastedCommit = p.text.trim()
+    p.destroy()
+
+    //github等服务器打包时，因时区不同，格式化的时间与本地时间对不上
+    //故直接保存毫秒
+    def buildTime = System.currentTimeMillis()
+
+    def gitBranch = currentBranch
+    def gitCommit = lastedCommit;
+
+    def jsonObj = new JSONObject()
+    jsonObj.put("time", buildTime)
+    jsonObj.put("branch", gitBranch)
+    jsonObj.put("commit", gitCommit)
+    return jsonObj.toString()
+}()
+
+def writeBuildInfoJson(dirPath, jsonText) {
+    println "----------Commit Info------------"
+
+    def buildInfoPath = "$dirPath/build_info.json".replace("\\", "/")
+    def jsonFile = file(buildInfoPath)
+    jsonFile.parentFile.mkdirs()
+    jsonFile.withWriter('utf-8') {
+        it.write(jsonText)
+    }
+    println "commit info file: $buildInfoPath"
+
+}
+
+this.afterEvaluate {
+    project.tasks.forEach {
+        if (it.name.startsWith("process") && it.name.endsWith("JavaRes")) {
+            //将构建信息打包到apk中，这个方法似乎不太靠谱，改为写入buildConfig
+            it.doLast {
+                println(">>> ${it.name} attach build json")
+                writeBuildInfoJson(it.destinationDir.path, buildInfoJson)
+            }
+        }
+    }
+
+}
+
+android {
+    namespace 'com.pic.catcher'
+    compileSdk 35
+
+    defaultConfig {
+        applicationId "com.pic.catcher"
+        minSdk 24
+        targetSdk 35
+        versionCode 1001
+        versionName "1.0-dev"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "int", "VERSION_CODE", "${versionCode}"
+        buildConfigField "String", "VERSION_NAME", "\"${versionName}\""
+        buildConfigField "String", "buildInfoJson64", "\"${buildInfoJson.bytes.encodeBase64()}\""
+    }
+//    sourceSets {
+//        main{
+//            resources{
+//                srcDir("src/main/reouserces")
+//            }
+//        }
+//    }
+    signingConfigs {
+        alpha {
+            storeFile file("${rootDir}/app/key-store-test.jks")
+            storePassword "123456"
+            keyAlias "piccatch"
+            keyPassword "123456"
+        }
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.alpha
+        }
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.alpha
+        }
+
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
+    viewBinding {
+        enabled = true
+    }
+
+    applicationVariants.all { variant ->
+        def outputs = variant.outputs
+        def size = outputs.size()
+        def commit = new JSONObject(buildInfoJson).optString("commit").substring(0, 6)
+        outputs.eachWithIndex { Object output, int index ->
+            def fontName = "piccatcher-v${variant.versionName}-${commit}-${variant.name}"
+            if (size == 1) {
+                output.outputFileName = "${fontName}.apk"
+            } else {
+                output.outputFileName = "${fontName}-${index}.apk"
+            }
+        }
+//        variant.properties.each {
+//            println("${it.key} --》 ${it.value}")
+//        }
+//        println("------------"+ variant.outputs)
+
+//        testOptions {
+//            //使javaTest可以使用外部库的代码，例如android.jar
+//            //但是，api实际没有结果。
+//            unitTests.returnDefaultValues = true
+//        }
+    }
+    buildFeatures {
+        buildConfig = true
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+
+    }
+}
+
+
+
+dependencies {
+    implementation(fileTree(dir: "libs", include: ["*.jar", "*.aar"]))
+    implementation(deps['com.github.Mingyueyixi.frame-base-utils:base'])
+//    implementation(deps['com.github.Mingyueyixi.frame-ui:ui-appcompat']){
+//        exclude(group:'androidx.core', module:'core')
+//    }
+    implementation(deps['com.github.Mingyueyixi.lposed:xposed-api2'])
+    implementation(deps['com.github.Mingyueyixi.lposed:plugin'])
+//    implementation(deps['androidx.appcompat:appcompat'])
+    compileOnly(deps['de.robv.android.xposed:api'])
+//    compileOnly('com.tencent.wcdb:wcdb-android:1.1-19')
+    // https://mvnrepository.com/artifact/com.tencent.wcdb/wcdb-android
+
+    // https://mvnrepository.com/artifact/org.json/json
+    // testImplementation 'org.json:json:20220924'
+
+    testImplementation(deps['junit:junit'])
+    androidTestImplementation(deps['androidx.test.ext:junit'])
+    androidTestImplementation(deps['androidx.test.espresso:espresso-core'])
+}
