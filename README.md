@@ -7,4 +7,4 @@
 
 ## 介绍
 
-Catch app's picture
+Catch picture from app
