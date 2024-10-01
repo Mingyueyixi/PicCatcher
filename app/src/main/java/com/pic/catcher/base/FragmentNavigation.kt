@@ -14,9 +14,9 @@ class FragmentNavigation(val activity: Activity, @IdRes val fragmentContainerRes
         var tag = fragClass.toString()
         var frag: Fragment? = activity.fragmentManager.findFragmentByTag(tag)
         if (frag == null) {
-            frag = fragClass.newInstance()
+            frag = fragClass.getConstructor().newInstance() as Fragment
         }
-        navigate(frag!!)
+        navigate(frag)
     }
 
     /**

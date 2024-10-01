@@ -36,8 +36,7 @@ class ViewModelProviders {
 
     class Factory {
         fun <T : BaseViewModel> create(clazz: Class<T>): T {
-            val result = clazz.getConstructor().newInstance()
-            return result
+            return clazz.getConstructor().newInstance()
         }
     }
 

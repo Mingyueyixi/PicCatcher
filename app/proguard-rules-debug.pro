@@ -20,30 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-##保留所有类的无参构造，避免反射崩溃
-#-keepclassmembers class * {
-#       <init>();
-#}
-## 保留构造方法，避免反射崩溃
-#-keepclassmembers class * {
-#       <init>(*);
-#}
-
--keepclassmembers class * extends com.pic.catcher.base.BaseFragment {
-       <init>();
-}
--keepclassmembers class * extends com.pic.catcher.base.BaseViewModel {
-       <init>();
-}
--keepclassmembers class * extends com.pic.catcher.base.BaseFragment {
-       <init>(*);
-}
--keepclassmembers class * extends com.pic.catcher.base.BaseViewModel {
-       <init>(*);
-}
--keepclassmembers class * extends com.lu.lposed.plugin.IPlugin {
-      <init>(*);
-}
--keepclassmembers class * extends com.lu.lposed.plugin.IPlugin {
-      <init>();
-}
+# 保留指定包及其子包下的所有类
+-keep class com.pic.catcher.* { *; }
+-keep enum com.pic.catcher.* { *; }
+-keep interface com.pic.catcher.* { *; }

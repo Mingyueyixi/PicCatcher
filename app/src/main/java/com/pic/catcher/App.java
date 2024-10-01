@@ -4,6 +4,9 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 
+import com.lu.lposed.api2.XposedHelpers2;
+import com.lu.magic.util.log.LogUtil;
+import com.lu.magic.util.log.SimpleLogger;
 import com.pic.catcher.base.CustomLifecycle;
 import com.pic.catcher.base.CustomLifecycleOwner;
 import com.pic.catcher.ui.JsonMenuManager;
@@ -16,6 +19,7 @@ public final class App extends Application implements CustomLifecycleOwner {
 
     public void onCreate() {
         super.onCreate();
+
         Companion.setInstance(this);
         JsonMenuManager.Companion.updateMenuListFromRemote(this);
     }
