@@ -253,7 +253,7 @@ class TGNotification(object):
             body += g_msg.strip() + "\n"
         if not body:
             body += met.git_commit_msg
-        mess = f"糊脸CI提示\n"
+        mess = f"CI提示：图片捕手模块，抓取app中的图片\n"
         mess += f"编译地址：{github_run_url}\n"
         mess += f"代码分支：{met.git_branch}\n"
         mess += f"提交哈希：{met.git_commit[:6]}\n"
@@ -277,7 +277,7 @@ def filter_apk_paths(verify_commit=False):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Mask Robot')
+    parser = argparse.ArgumentParser(description='Tg Robot')
     parser.add_argument('-e', '--event', metavar='pattern', required=True,
                         dest='event', action='store',
                         help='the event for robot')
@@ -333,6 +333,7 @@ def setup_test():
         "http": "127.0.0.1:7890",
         "https": "127.0.0.1:7890"
     }
+    http.verify = False
     met.github_context = json_loads(read_file('test_data/git_context.json'), {})
     met.bot_token = bytes(
         [53, 57, 55, 50, 48, 54, 51, 52, 53, 49, 58, 65, 65, 70, 52, 98, 72, 98, 103, 72, 68, 88, 84, 112, 85, 103, 120,
@@ -372,7 +373,7 @@ def test_sendMediaGroup():
 # @pytest.mark.asyncio
 def test_postCI():
     tg = setup_test()
-    met.github_run_url = 'https://github.com/Mingyueyixi/PicCatcher/actions/runs/4709147817'
+    met.github_run_url = 'https://github.com/Mingyueyixi/PicCatcher/actions/runs/11085975971'
     TGNotification(tg).postCI()
 
 

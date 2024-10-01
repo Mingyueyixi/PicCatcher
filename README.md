@@ -7,4 +7,4 @@
 
 ## 介绍
 
-Catch picture from app
+抓取抓取 app 运行中的图片，并保存的sdcard/Picture目录下，方便查看。
