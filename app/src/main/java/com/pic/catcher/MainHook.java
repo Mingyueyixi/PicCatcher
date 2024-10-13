@@ -15,6 +15,8 @@ import com.lu.magic.util.AppUtil;
 import com.lu.magic.util.log.LogUtil;
 import com.lu.magic.util.log.SimpleLogger;
 import com.pic.catcher.plugin.BitmapCatcherPlugin;
+import com.pic.catcher.plugin.GlideCatcherPlugin;
+import com.pic.catcher.plugin.WebViewCatcherPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,7 +182,9 @@ public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit, 
     private void initTargetPlugins(Context context, XC_LoadPackage.LoadPackageParam lpparam) {
         //目前生成的plugin都是单例的
         PluginRegistry.register(
-                BitmapCatcherPlugin.class
+                BitmapCatcherPlugin.class,
+                GlideCatcherPlugin.class,
+                WebViewCatcherPlugin.class
         ).handleHooks(context, lpparam);
 
 
