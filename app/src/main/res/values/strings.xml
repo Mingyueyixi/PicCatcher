@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PicCatcher</string>
+    <string name="app_name">图片捕手</string>
     <string name="app_xposed_description">App图片抓取器</string>
     <string name="module_not_active">模块未激活</string>
     <string name="module_have_active">模块已激活</string>

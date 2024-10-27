@@ -57,7 +57,7 @@ fun TextView.setTextColorTheme(color: Int) {
 }
 
 
-inline fun <T> T?.takeNotNull(fallback: T): T {
+fun <T> T?.takeNotNull(fallback: T): T {
     if (this == null) {
         return fallback
     }

@@ -61,12 +61,12 @@ this.afterEvaluate {
 
 android {
     namespace 'com.pic.catcher'
-    compileSdk 35
+    compileSdk COMPILE_SDK_VERSION.toInteger()
 
     defaultConfig {
         applicationId "com.pic.catcher"
         minSdk 24
-        targetSdk 35
+        targetSdk TARGET_SDK_VERSION.toInteger()
         versionCode 1
         versionName "1.0-gaoji"
 
@@ -85,7 +85,7 @@ android {
 //    }
     signingConfigs {
         alpha {
-            storeFile file("${rootDir}/app/key-store-test.jks")
+            storeFile file("${rootDir}/keys/key-store-test.jks")
             storePassword "123456"
             keyAlias "piccatch"
             keyPassword "123456"
@@ -94,8 +94,8 @@ android {
     buildTypes {
         debug {
             debuggable true
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro','proguard-rules-debug.pro'
             signingConfig signingConfigs.alpha
         }

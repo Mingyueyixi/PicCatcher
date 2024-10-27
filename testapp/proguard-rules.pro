@@ -20,27 +20,13 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-##保留所有类的无参构造，避免反射崩溃
-#-keepclassmembers class * {
-#       <init>();
-#}
-## 保留构造方法，避免反射崩溃
-#-keepclassmembers class * {
-#       <init>(*);
-#}
+-dontwarn dalvik.**
+-dontwarn com.tencent.smtt.**
 
--keepclassmembers class * extends com.pic.catcher.base.BaseFragment {
-        <init>();
+-keep class com.tencent.smtt.** {
+    *;
 }
--keepclassmembers class * extends com.pic.catcher.base.BaseViewModel {
-       <init>();
-}
--keepclassmembers class * extends com.pic.catcher.base.BaseFragment {
-       <init>();
-}
--keepclassmembers class * extends com.pic.catcher.base.BaseViewModel {
-       <init>();
-}
--keepclassmembers class * extends com.lu.lposed.plugin.IPlugin {
-      <init>(*);
+
+-keep class com.tencent.tbs.** {
+    *;
 }

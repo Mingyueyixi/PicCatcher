@@ -168,6 +168,7 @@ public class PicExportManager {
         final String finalLastName = lastName;
         runOnIo(() -> {
             if (dataBytes == null || dataBytes.length == 0) {
+                LogUtil.d("exportByteArray: dataBytes is empty");
                 return;
             }
             FileOutputStream fileOutputStream = null;
@@ -175,6 +176,7 @@ public class PicExportManager {
                 String fileName = Md5Util.get(dataBytes) + finalLastName;
                 File file = new File(this.exportDir, fileName);
                 if (file.exists()) {
+                    LogUtil.d("exportByteArray: file already exists:", file);
                     return;
                 }
                 this.exportDir.mkdirs();
@@ -182,7 +184,8 @@ public class PicExportManager {
                 IOUtil.writeByByte(dataBytes, fileOutputStream);
                 LogUtil.d("exportByteArray: ", file);
             } catch (Throwable th) {
-                th.printStackTrace();
+//                th.printStackTrace();
+                LogUtil.d(th);
             } finally {
                 IOUtil.closeQuietly(fileOutputStream);
             }

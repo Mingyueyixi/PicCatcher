@@ -28,11 +28,9 @@ ext {
             'com.github.Mingyueyixi.frame-base-utils:core'    : 'com.github.Mingyueyixi.frame-base-utils:core:40657f21dc',
 
 
-//            'com.github.Mingyueyixi:frame-ui'                 : 'com.github.Mingyueyixi:frame-ui:main-SNAPSHOT',
-//            'com.github.Mingyueyixi:frame-ui'                 : 'com.github.Mingyueyixi:frame-ui:v1.0.0-alpha.2',
-//            'com.github.Mingyueyixi.frame-ui:ui-all'             : 'com.github.Mingyueyixi.frame-ui:ui-all:8db89324ba',
-//            'com.github.Mingyueyixi.frame-ui:ui-material'        : 'com.github.Mingyueyixi.frame-ui:ui-material:8db89324ba',
-//            'com.github.Mingyueyixi.frame-ui:ui-base'            : 'com.github.Mingyueyixi.frame-ui:ui-base:8db89324ba',
+//            'com.github.Mingyueyixi.frame-ui:ui-all'             : 'com.github.Mingyueyixi.frame-ui:ui-all:332536884f',
+            'com.github.Mingyueyixi.frame-ui:ui-material'        : 'com.github.Mingyueyixi.frame-ui:ui-material:332536884f',
+//            'com.github.Mingyueyixi.frame-ui:ui-base'            : 'com.github.Mingyueyixi.frame-ui:ui-base:332536884f',
             'com.github.Mingyueyixi.frame-ui:ui-appcompat'    : 'com.github.Mingyueyixi.frame-ui:ui-appcompat:332536884f',
 
             'com.github.Mingyueyixi:frame-multi-preference'   : 'com.github.Mingyueyixi:frame-multi-preference:main-SNAPSHOT',

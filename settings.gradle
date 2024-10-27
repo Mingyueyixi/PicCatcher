@@ -4,12 +4,13 @@ pluginManagement {
 //            allowInsecureProtocol = true
 //            url "http://127.0.0.1:10072"
 //        }
-        maven { url 'https://jitpack.io/' }
         maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
         maven { url 'https://repo.huaweicloud.com/repository/maven' }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url 'https://jitpack.io/' }
+
         //central有的，public聚合仓不一定有，奇葩
         maven { url 'https://maven.aliyun.com/repository/central' }
-        maven { url "https://maven.aliyun.com/repository/public" }
         maven { url "https://maven.aliyun.com/repository/google" }
         maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
 
@@ -26,12 +27,13 @@ dependencyResolutionManagement {
 //            url "http://127.0.0.1:10072"
 //        }
 
-        maven { url 'https://jitpack.io/' }
         maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
         maven { url 'https://repo.huaweicloud.com/repository/maven' }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        maven { url 'https://jitpack.io/' }
+
         //central有的，public聚合仓不一定有，奇葩
         maven { url 'https://maven.aliyun.com/repository/central' }
-        maven { url "https://maven.aliyun.com/repository/public" }
         maven { url "https://maven.aliyun.com/repository/google" }
         maven { url "https://maven.aliyun.com/repository/gradle-plugin" }
 
@@ -41,3 +43,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "PicCatcher"
 include ':app'
+include ':testapp'

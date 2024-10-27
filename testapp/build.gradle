@@ -1,0 +1,80 @@
+import org.json.JSONObject
+
+import java.text.SimpleDateFormat
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+apply {
+    from rootProject.file('props.gradle')
+}
+
+android {
+    namespace 'com.pic.testapp'
+    compileSdk COMPILE_SDK_VERSION.toInteger()
+
+    defaultConfig {
+        applicationId "com.pic.testapp"
+        minSdk 23
+        targetSdk TARGET_SDK_VERSION.toInteger()
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        alpha {
+            storeFile file("${rootDir}/keys/key-store-test.jks")
+            storePassword "123456"
+            keyAlias "piccatch"
+            keyPassword "123456"
+        }
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro','proguard-rules-debug.pro'
+            signingConfig signingConfigs.alpha
+        }
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.alpha
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        viewBinding true
+    }
+}
+
+dependencies {
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.10.0'
+    // Flex布局依赖，可配合RecyclerView也可以单独使用
+    // https://mvnrepository.com/artifact/com.google.android.flexbox/flexbox
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    implementation deps['com.github.Mingyueyixi.frame-ui:ui-material']
+    api 'com.tencent.tbs:tbssdk:44286'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.7'
+    implementation 'com.squareup.okio:okio:1.17.5'
+    implementation(deps['com.github.Mingyueyixi.frame-base-utils:base'])
+
+//    implementation('com.github.Mingyueyixi.frame-base-utils:core')
+
+//    testImplementation 'junit:junit:4.14-SNAPSHOT'
+//    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}

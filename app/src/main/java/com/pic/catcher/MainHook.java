@@ -16,8 +16,10 @@ import com.lu.magic.util.log.LogUtil;
 import com.lu.magic.util.log.SimpleLogger;
 import com.pic.catcher.plugin.BitmapCatcherPlugin;
 import com.pic.catcher.plugin.GlideCatcherPlugin;
+import com.pic.catcher.plugin.OKHttpPlugin;
 import com.pic.catcher.plugin.WebViewCatcherPlugin;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +89,11 @@ public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit, 
                         return (short) 0;
                     }
                     if (BuildConfig.DEBUG) {
-                        LogUtil.w("setOnErrorReturnFallback", throwable);
+                        if (throwable instanceof InvocationTargetException) {
+                            LogUtil.w("setOnErrorReturnFallback", ((InvocationTargetException) throwable).getTargetException());
+                        } else {
+                            LogUtil.w("setOnErrorReturnFallback2", throwable);
+                        }
                     }
                     return null;
                 });
@@ -119,18 +125,18 @@ public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit, 
 //                }
 //        );
 //
-        unhook = XposedHelpers2.findAndHookMethod(
-                Instrumentation.class.getName(),
-                lpparam.classLoader,
-                "callApplicationOnCreate",
-                Application.class.getName(),
-                new XC_MethodHook2() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        initPlugin((Context) param.args[0], lpparam);
-                    }
-                }
-        );
+//        unhook = XposedHelpers2.findAndHookMethod(
+//                Instrumentation.class.getName(),
+//                lpparam.classLoader,
+//                "callApplicationOnCreate",
+//                Application.class.getName(),
+//                new XC_MethodHook2() {
+//                    @Override
+//                    protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//                        initPlugin((Context) param.args[0], lpparam);
+//                    }
+//                }
+//        );
         initUnHookList.add(unhook);
 //
 //        XposedHelpers2.findAndHookMethod(
@@ -182,9 +188,10 @@ public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit, 
     private void initTargetPlugins(Context context, XC_LoadPackage.LoadPackageParam lpparam) {
         //目前生成的plugin都是单例的
         PluginRegistry.register(
-                BitmapCatcherPlugin.class,
-                GlideCatcherPlugin.class,
-                WebViewCatcherPlugin.class
+//                BitmapCatcherPlugin.class,
+//                GlideCatcherPlugin.class,
+//                WebViewCatcherPlugin.class
+                OKHttpPlugin.class
         ).handleHooks(context, lpparam);
 
 
