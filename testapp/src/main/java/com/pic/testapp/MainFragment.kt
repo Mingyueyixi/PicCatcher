@@ -44,7 +44,8 @@ class MainFragment : BindingFragment<FragMainLayoutBinding>() {
     override fun initData() {
         mAdapter.setData(
             listOf(
-                ItemBean("显示网络图片", LoadHttpPicAction()),
+                ItemBean("使用okhttp4加载网络图片", LoadHttpPicAction(false)),
+                ItemBean("使用系统http api加载网络图片", LoadHttpPicAction(true)),
                 ItemBean("loadBitmap", LoadBitmapAction()),
                 ItemBean("webview", WebViewFragment::class.java),
                 ItemBean("x5Webview", X5WebViewFragment::class.java),

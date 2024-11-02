@@ -10,17 +10,11 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.lu.magic.util.IOUtil;
 import com.pic.testapp.util.AppExecutor;
 import com.pic.testapp.util.LogUtil;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -30,8 +24,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import okio.Buffer;
-import okio.BufferedSource;
 
 /**
  * @author Lu
@@ -40,6 +32,12 @@ import okio.BufferedSource;
  */
 public class LoadHttpPicAction implements Action {
     WeakReference<Context> mContextRef;
+
+    private boolean isGetHttpPicBySystemOkHttp = true;
+
+    public LoadHttpPicAction(boolean isGetHttpPicBySystemOkHttp) {
+        this.isGetHttpPicBySystemOkHttp = isGetHttpPicBySystemOkHttp;
+    }
 
     @Override
     public void doAction(Context context) {
@@ -82,7 +80,9 @@ public class LoadHttpPicAction implements Action {
         LogUtil.d("response");
         ResponseBody body = response.body();
         LogUtil.d("body");
-        ResponseBody bodyNew = response.peekBody(Long.MAX_VALUE);
+//        ResponseBody bodyNew = response.peekBody(Long.MAX_VALUE);
+
+
 //        byte[] bytes = IOUtil.readToBytes(bodyNew.byteStream());
 
         //返回一个新的
@@ -99,16 +99,17 @@ public class LoadHttpPicAction implements Action {
     }
 
     public void doNetworkTask() throws IOException {
-//        String picUrl = "https://csdnimg.cn/release/blogv2/dist/pc/img/btnGuideSide1.gif";
-        String picUrl = "https://ts2.cn.mm.bing.net/th?id=ORMS.96254be2fd646fe1f697a79490ffc4e9&pid=Wdp&w=612&h=328&qlt=90&c=1&rs=1&dpr=1.25&p=0";
 //        String picUrl = "https://192.168.33.66/th?id=ORMS.96254be2fd646fe1f697a79490ffc4e9&pid=Wdp&w=612&h=328&qlt=90&c=1&rs=1&dpr=1.25&p=0";
-        LogUtil.d(picUrl);
-        InputStream iStream = getUrlStream(picUrl);
-//        InputStream iStream = getOkHttpStream(picUrl);
-        LogUtil.d(iStream);
+        InputStream iStream;
+        if (isGetHttpPicBySystemOkHttp) {
+            String picUrl = "https://ts2.cn.mm.bing.net/th?id=ORMS.96254be2fd646fe1f697a79490ffc4e9&pid=Wdp&w=612&h=328&qlt=90&c=1&rs=1&dpr=1.25&p=0";
+            iStream = getUrlStream(picUrl);
+        } else {
+            String picUrl = "https://csdnimg.cn/release/blogv2/dist/pc/img/btnGuideSide1.gif";
+            iStream = getOkHttpStream(picUrl);
+        }
         Bitmap bitmap = BitmapFactory.decodeStream(iStream);
         LogUtil.d(bitmap);
-//        iStream.close();
         LogUtil.i("LoadHttpPicAction", "doNetworkTask");
         AppExecutor.INSTANCE.runOnUiThread(() -> {
             doUiTask(bitmap);

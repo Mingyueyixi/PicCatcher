@@ -1,5 +1,6 @@
 package com.pic.testapp;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.text.TextUtils;
@@ -60,6 +61,7 @@ public class X5WebViewFragment extends BindingFragment<FragWebContainerBinding> 
         mBinding.tvGo.setOnClickListener(v -> openUrl(mBinding.etWebUrl.getText().toString()));
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
         WebSettings setting = mWebView.getSettings();
         setting.setJavaScriptEnabled(true);
@@ -109,7 +111,7 @@ public class X5WebViewFragment extends BindingFragment<FragWebContainerBinding> 
             return;
         }
         if (URLUtil.isHttpsUrl(url) || URLUtil.isHttpUrl(url) || URLUtil.isFileUrl(url)) {
-            LocalStorage.getDefault().edit().putString(LocalStorage.Key.X5_WEB_VIEW_LAST_URL, url).commit();
+            LocalStorage.getDefault().edit().putString(LocalStorage.Key.X5_WEB_VIEW_LAST_URL, url).apply();
         }
     }
 

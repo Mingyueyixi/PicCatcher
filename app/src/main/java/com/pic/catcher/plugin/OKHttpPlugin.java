@@ -12,10 +12,6 @@ import com.lu.magic.util.log.LogUtil;
 import com.pic.catcher.ClazzN;
 import com.pic.catcher.util.Regexs;
 
-import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Method;
-import java.util.Arrays;
-
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 /**
@@ -27,7 +23,7 @@ public class OKHttpPlugin implements IPlugin {
     @Override
     public void handleHook(Context context, XC_LoadPackage.LoadPackageParam loadPackageParam) {
         handleHookOkHttp3(context, loadPackageParam);
-//        handleHookAndroidOkHttp(context, loadPackageParam);
+        handleHookAndroidOkHttp(context, loadPackageParam);
     }
 
     private void handleHookAndroidOkHttp(Context context, XC_LoadPackage.LoadPackageParam loadPackageParam) {
@@ -39,9 +35,10 @@ public class OKHttpPlugin implements IPlugin {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         Object response = XposedHelpers2.getObjectField(param.thisObject, "userResponse");
-
+                        if (response == null) {
+                            return;
+                        }
                         LogUtil.d("response", response);
-
                         String contentType = (String) XposedHelpers2.callMethod(response, "header", "Content-Type");
                         if (TextUtils.isEmpty(contentType)) {
                             LogUtil.d("content-type is empty");
@@ -58,26 +55,19 @@ public class OKHttpPlugin implements IPlugin {
                             return;
                         }
                         //com.android.okhttp.internal.http.Http1xStream$FixedLengthSource
-                        Object source = XposedHelpers2.callMethod(body, "source");
-                        LogUtil.d("bufferedSource", source);
-                        if (source == null) {
+                        Object bufferSource = XposedHelpers2.callMethod(body, "source");
+                        LogUtil.d("bufferedSource", bufferSource);
+                        if (bufferSource == null) {
                             return;
                         }
+                        Object buffer = XposedHelpers2.getObjectField(bufferSource, "buffer");
                         //读取二进制
-                        Object bytes = XposedHelpers2.callMethod(source, "readByteArray");
-//                        Object buffer = XposedHelpers2.getObjectField(source, "buffer");
-                        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                        outputStream.write((byte[]) bytes);
-                        Object sink = XposedHelpers2.callStaticMethod(ClazzN.from("com.android.okhttp.okio.Okio"), "sink", outputStream);
-                        Object buffer = XposedHelpers2.callMethod(ClazzN.from("com.android.okhttp.okio.Okio"), "buffer", sink);
-                        XposedHelpers2.setObjectField(body, "buffer", buffer);
+                        Object bytes = XposedHelpers2.callMethod(bufferSource, "readByteArray");
+                        XposedHelpers2.callMethod(buffer, "write", bytes);
+                        //因为读完流就废了，所以重新写回去，否则影响http实际的读写。
+                        //安卓系统的buffer没有peeked方法，所以这么做;
+                        //但是这样似乎会丢失原先的流读取异常。可以考虑复制继承自安卓hide api 自行实现一个PeekedSource来读取
 
-                        //com.android.okhttp.internal.http.Http1xStream$FixedLengthSource
-//                        Object sourceField = XposedHelpers2.getObjectField(source, "source");
-//                        XposedHelpers2.callMethod(buffer, "read", bytes);
-                        //读完就废了，所以复制一个给原先的结果
-
-//                        LogUtil.d("readByteArray is ok", bytes + "", sourceField);
                         if (bytes != null) {
                             LogUtil.d("readByteArray is bytes. start download");
                             PicExportManager.getInstance().exportByteArray((byte[]) bytes, guessFileEx);
