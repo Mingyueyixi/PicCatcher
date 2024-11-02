@@ -68,7 +68,7 @@ public class X5WebViewFragment extends BindingFragment<FragWebContainerBinding> 
         setting.setDomStorageEnabled(true);
         setting.setDatabaseEnabled(true);
         setting.setAllowUniversalAccessFromFileURLs(true);
-
+        setting.setMixedContentMode(android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onReceivedSslError(WebView webView, SslErrorHandler sslErrorHandler, SslError sslError) {

@@ -38,7 +38,7 @@ public class OKHttpPlugin implements IPlugin {
                         if (response == null) {
                             return;
                         }
-                        LogUtil.d("response", response);
+//                        LogUtil.d("response", response);
                         String contentType = (String) XposedHelpers2.callMethod(response, "header", "Content-Type");
                         if (TextUtils.isEmpty(contentType)) {
                             LogUtil.d("content-type is empty");
@@ -95,6 +95,9 @@ public class OKHttpPlugin implements IPlugin {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         Object response = param.getResult();
+                        if (response == null) {
+                            return;
+                        }
                         String contentType = (String) XposedHelpers2.callMethod(response, "header", "Content-Type");
                         if (TextUtils.isEmpty(contentType)) {
                             LogUtil.d("content-type is empty");

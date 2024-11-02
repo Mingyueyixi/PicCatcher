@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.lu.lposed.api2.XC_MethodHook2;
 import com.lu.lposed.api2.XposedHelpers2;
+import com.lu.lposed.plugin.PluginProviders;
 import com.lu.lposed.plugin.PluginRegistry;
 import com.lu.magic.util.AppUtil;
 import com.lu.magic.util.log.LogUtil;
@@ -105,7 +106,10 @@ public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit, 
                 new XC_MethodHook() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                        initPlugin((Context) param.thisObject, lpparam);
+                        Object thisObject = param.thisObject;
+                        if (thisObject instanceof Context) {
+                            initPlugin((Context) thisObject, lpparam);
+                        }
                     }
                 }
         );
@@ -178,7 +182,8 @@ public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit, 
                 unhook.unhook();
             }
         }
-        LogUtil.i("init plugin finish");
+
+        LogUtil.i("init plugin finish, plugin size is", PluginProviders.all().size());
     }
 
     private void initSelfPlugins(Context context, XC_LoadPackage.LoadPackageParam lpparam) {
@@ -188,12 +193,11 @@ public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit, 
     private void initTargetPlugins(Context context, XC_LoadPackage.LoadPackageParam lpparam) {
         //目前生成的plugin都是单例的
         PluginRegistry.register(
-//                BitmapCatcherPlugin.class,
-//                GlideCatcherPlugin.class,
-//                WebViewCatcherPlugin.class
+                BitmapCatcherPlugin.class,
+                GlideCatcherPlugin.class,
+                WebViewCatcherPlugin.class,
                 OKHttpPlugin.class
         ).handleHooks(context, lpparam);
-
 
     }
 

@@ -42,5 +42,5 @@
        <init>();
 }
 -keepclassmembers class * extends com.lu.lposed.plugin.IPlugin {
-      <init>(*);
+      <init>();
 }

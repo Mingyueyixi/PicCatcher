@@ -61,7 +61,7 @@ public class PicExportManager {
             File exportFile = new File(exportDir, fileName);
             exportDir.mkdirs();
             FileUtils.copyFile(file, exportFile);
-            LogUtil.d("exportBitmapFile: " + exportFile.getAbsolutePath());
+            LogUtil.i("exportBitmapFile: " + exportFile.getAbsolutePath());
         });
 
     }
@@ -85,7 +85,7 @@ public class PicExportManager {
                 }
                 tempStream = new FileOutputStream(exportFile);
                 IOUtil.writeByByte(bitmapBytes, tempStream);
-                LogUtil.d("exportBitmap: ", exportFile.getAbsolutePath());
+                LogUtil.i("exportBitmap: ", exportFile.getAbsolutePath());
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } finally {
@@ -182,7 +182,7 @@ public class PicExportManager {
                 this.exportDir.mkdirs();
                 fileOutputStream = new FileOutputStream(file);
                 IOUtil.writeByByte(dataBytes, fileOutputStream);
-                LogUtil.d("exportByteArray: ", file);
+                LogUtil.i("exportByteArray: ", file);
             } catch (Throwable th) {
 //                th.printStackTrace();
                 LogUtil.d(th);
