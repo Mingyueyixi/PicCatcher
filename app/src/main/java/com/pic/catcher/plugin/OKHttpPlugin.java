@@ -35,6 +35,7 @@ public class OKHttpPlugin implements IPlugin {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                         Object response = XposedHelpers2.getObjectField(param.thisObject, "userResponse");
+
                         if (response == null) {
                             return;
                         }
@@ -42,6 +43,7 @@ public class OKHttpPlugin implements IPlugin {
                         String contentType = (String) XposedHelpers2.callMethod(response, "header", "Content-Type");
                         if (TextUtils.isEmpty(contentType)) {
                             LogUtil.d("content-type is empty");
+//                            if (Regexs.PIC_URL.matcher(url))
                             return;
                         }
                         String guessFileEx = MimeTypeMap.getSingleton().getExtensionFromMimeType(contentType);

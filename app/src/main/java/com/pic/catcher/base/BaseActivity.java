@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 /**
  * @author Mingyueyixi
  * @date 2024/9/28 19:25
- * @description
+ * @description BaseActivity
  */
 public class BaseActivity extends Activity implements CustomLifecycleOwner{
     private CustomLifecycleOwnerDelegate mCustomLifecycleOwnerDelegate = new CustomLifecycleOwnerDelegate();

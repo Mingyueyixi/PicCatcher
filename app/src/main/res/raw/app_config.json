@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "mainUi": {
+    "menuList": [
+      {
+        "title": "反馈问题",
+        "link": "https://github.com/Mingyueyixi/PicCatcher/issues"
+      },
+      {
+        "title": "交流群",
+        "link": "https://t.me/MaskWechatX",
+        "appLink": {
+          "links": [
+            "tg:resolve?domain=MaskWechatX"
+          ]
+        }
+      },
+      {
+        "title": "关于",
+        "link": "https://github.com/Mingyueyixi/PicCatcher"
+      }
+    ]
+  }
+}

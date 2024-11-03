@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.lu.magic.util.SizeUtil
-import com.lu.magic.util.ToastUtil
 import com.lu.magic.util.kxt.toElseString
 import com.lu.magic.util.ripple.RectangleRippleBuilder
 import com.lu.magic.util.ripple.RippleApplyUtil
@@ -61,9 +60,9 @@ class MainFragment : BaseFragment() {
                             val itemValue = getItem(layoutPosition)
 
                             when (itemValue) {
-//                                1 -> clickModuleCard()
+                                1 -> clickModuleCard()
                                 2 -> {
-                                    ToastUtil.showLong("""这个模块会将目标app的图片抓取，并保存到"${PicExportManager.getInstance().exportDir.parent}/app包名"下，请注意在不使用时，一定要将 LSP 管理器的选项关闭，以免一直抓取图片，影响app性能。""")
+                                    TipViewUtil.showLong(context,"""这个模块会将目标app的图片抓取，并保存到"${PicExportManager.getInstance().exportDir.parent}/app包名"下，请注意在不使用时，一定要将 LSP 管理器的选项关闭，以免一直抓取图片，影响app性能。""")
                                 }
 //                                3 -> jumpManagerConfigUI(Constrant.VALUE_INTENT_PLUGIN_MODE_MANAGER)
 //                                donateCardId -> AppRouter.routeDonateFeat(requireActivity())
@@ -152,15 +151,15 @@ class MainFragment : BaseFragment() {
 //
 //        }
         mainBinding.listView.adapter = mListAdapter
-        AppConfigUtil.load { config, isRemote ->
-            if (isDetached || isRemoving) {
-                return@load
-            }
-            val donateCard = config.mainUi?.donateCard ?: return@load
-            if (donateCard.show) {
-                showDonateCard()
-            }
-        }
+//        AppConfigUtil.load { config, isRemote ->
+//            if (isDetached || isRemoving) {
+//                return@load
+//            }
+//            val donateCard = config.mainUi?.donateCard ?: return@load
+//            if (donateCard.show) {
+//                showDonateCard()
+//            }
+//        }
     }
 
     private fun clickModuleCard() {

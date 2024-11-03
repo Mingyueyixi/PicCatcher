@@ -1,18 +1,20 @@
 package com.pic.catcher.config
 
-import androidx.annotation.Keep
+import com.pic.catcher.ui.JsonMenuManager
 import org.json.JSONObject
 
 
 class AppConfig(
-    var mainUi: MainUi?
+    var mainUi: MainUi?,
+    var version: Int,
 ) {
-    constructor() : this(null)
+    constructor() : this(null, 0)
 
     companion object {
         fun fromJson(json: JSONObject?): AppConfig? {
             return if (json == null) null else AppConfig(
-                MainUi.fromJson(json.optJSONObject("mainUi"))
+                MainUi.fromJson(json.optJSONObject("mainUi")),
+                json.optInt("version")
             )
         }
     }
@@ -20,13 +22,15 @@ class AppConfig(
 
 class MainUi(
     var donateCard: DonateCard?,
-    var moduleCard: ModuleCard?
+    var moduleCard: ModuleCard?,
+    var menuList: List<MenuBean>?
 ) {
     companion object {
         fun fromJson(json: JSONObject?): MainUi? {
             return if (json == null) null else MainUi(
                 DonateCard.fromJson(json.optJSONObject("donateCard")),
-                ModuleCard.fromJson(json.optJSONObject("moduleCard"))
+                ModuleCard.fromJson(json.optJSONObject("moduleCard")),
+                MenuBean.fromJsonArray(json.optJSONArray("menuList"))
             )
         }
     }

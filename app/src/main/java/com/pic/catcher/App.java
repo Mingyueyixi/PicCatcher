@@ -9,6 +9,7 @@ import com.lu.magic.util.log.LogUtil;
 import com.lu.magic.util.log.SimpleLogger;
 import com.pic.catcher.base.CustomLifecycle;
 import com.pic.catcher.base.CustomLifecycleOwner;
+import com.pic.catcher.config.AppConfigUtil;
 import com.pic.catcher.ui.JsonMenuManager;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,7 @@ public final class App extends Application implements CustomLifecycleOwner {
         super.onCreate();
 
         Companion.setInstance(this);
-        JsonMenuManager.Companion.updateMenuListFromRemote(this);
+        AppConfigUtil.Companion.init();
     }
 
     @NonNull

@@ -53,16 +53,11 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         super.onCreateOptionsMenu(menu)
         JsonMenuManager.inflate(this, menu)
         return true
     }
 
-    override fun onResume() {
-        super.onResume()
-        JsonMenuManager.updateMenuListFromRemoteIfNeed(this)
-    }
 
 }
