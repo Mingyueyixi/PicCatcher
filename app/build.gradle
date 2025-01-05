@@ -67,8 +67,8 @@ android {
         applicationId "com.pic.catcher"
         minSdk 24
         targetSdk TARGET_SDK_VERSION.toInteger()
-        versionCode 1
-        versionName "1.0-gaoji"
+        versionCode 2
+        versionName "1.1-yp"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

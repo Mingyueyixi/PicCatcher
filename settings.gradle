@@ -4,8 +4,8 @@ pluginManagement {
 //            allowInsecureProtocol = true
 //            url "http://127.0.0.1:10072"
 //        }
-        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
-        maven { url 'https://repo.huaweicloud.com/repository/maven' }
+//        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
+//        maven { url 'https://repo.huaweicloud.com/repository/maven' }
         maven { url "https://maven.aliyun.com/repository/public" }
         maven { url 'https://jitpack.io/' }
 
@@ -27,8 +27,8 @@ dependencyResolutionManagement {
 //            url "http://127.0.0.1:10072"
 //        }
 
-        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
-        maven { url 'https://repo.huaweicloud.com/repository/maven' }
+//        maven { url 'https://mirrors.cloud.tencent.com/nexus/repository/maven-public' }
+//        maven { url 'https://repo.huaweicloud.com/repository/maven' }
         maven { url "https://maven.aliyun.com/repository/public" }
         maven { url 'https://jitpack.io/' }
 
