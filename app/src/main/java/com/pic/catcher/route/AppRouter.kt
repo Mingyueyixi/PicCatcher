@@ -8,9 +8,9 @@ import com.lu.magic.util.AppUtil
 import com.lu.magic.util.ToastUtil
 import com.lu.magic.util.log.LogUtil
 import com.pic.catcher.App
-import com.pic.catcher.base.ViewModelProvider
 import com.pic.catcher.base.ViewModelProviders
 import com.pic.catcher.config.AppConfigUtil
+import com.pic.catcher.ui.ConfigActivity
 import com.pic.catcher.ui.MainActivity
 import com.pic.catcher.ui.WebViewActivity
 import com.pic.catcher.ui.vm.AppUpdateViewModel
@@ -26,13 +26,16 @@ class AppRouter {
     companion object {
         val vailScheme = "piccatcher"
         val vailHost = "com.pic.catcher"
+        val baseAppUri = "piccatcher://com.pic.catcher"
         private val appUpdateViewModel = ViewModelProviders.from(App.instance).get(AppUpdateViewModel::class.java)
+
+
         fun routeCheckAppUpdateFeat(activity: Activity) {
-            route(activity, "piccatcher://com.pic.catcher/feat/checkAppUpdate")
+            route(activity, "$baseAppUri/feat/checkAppUpdate")
         }
 
         fun routeDonateFeat(activity: Activity) {
-            route(activity, "piccatcher://com.pic.catcher/feat/donate")
+            route(activity, "/feat/donate")
         }
 
         fun routeWebViewPage(
@@ -42,7 +45,7 @@ class AppRouter {
             isDialogUI: Boolean = false,
             forceHtml: Boolean = false
         ) {
-            val uri = Uri.parse("piccatcher://com.pic.catcher/page/webView")
+            val uri = Uri.parse("$baseAppUri/page/webView")
                 .buildUpon()
                 .appendQueryParameter("forceHtml", forceHtml.toString())
                 .appendQueryParameter("isDialog", isDialogUI.toString())
@@ -174,12 +177,14 @@ class AppRouter {
 
                 "main" -> jumpMainPage(context, uri)
 
+                "config" -> jumpConfigPage(context, uri)
                 else -> LogUtil.w(name, "for link pageGroup not impl")
             }
         }
 
+
         fun routeMainPage(context: Context, intentData: Uri? = null) {
-            val routeUri = Uri.parse("piccatcher://com.pic.catcher/page/main").buildUpon()
+            val routeUri = Uri.parse("$baseAppUri/page/main").buildUpon()
                 .appendQueryParameter("data", intentData.toString())
                 .build()
                 .toString()
@@ -194,5 +199,17 @@ class AppRouter {
             }
             context.startActivity(intent)
         }
+
+        fun routeConfigPage(context: Context) {
+            val routeUri = Uri.parse("$baseAppUri/page/config").buildUpon().build().toString()
+            route(context, routeUri)
+        }
+
+        private fun jumpConfigPage(context: Context, uri: Uri) {
+            val intent = Intent(context, ConfigActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
+        }
+
     }
 }

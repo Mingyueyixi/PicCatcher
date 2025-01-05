@@ -173,6 +173,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     // testImplementation 'org.json:json:20220924'
 
+    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect
+//    implementation 'org.jetbrains.kotlin:kotlin-reflect:2.1.0'
+
     testImplementation(deps['junit:junit'])
     androidTestImplementation(deps['androidx.test.ext:junit'])
     androidTestImplementation(deps['androidx.test.espresso:espresso-core'])

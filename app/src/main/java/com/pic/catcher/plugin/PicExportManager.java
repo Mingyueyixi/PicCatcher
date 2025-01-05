@@ -13,6 +13,7 @@ import com.lu.magic.util.AppUtil;
 import com.lu.magic.util.IOUtil;
 import com.lu.magic.util.log.LogUtil;
 import com.lu.magic.util.thread.AppExecutor;
+import com.pic.catcher.config.ModuleConfig;
 import com.pic.catcher.util.FileUtils;
 import com.pic.catcher.util.Md5Util;
 import com.pic.catcher.util.PicUtil;
@@ -57,6 +58,10 @@ public class PicExportManager {
             if (!file.exists()) {
                 return;
             }
+            if (ModuleConfig.isLessThanMinSize(file.length())) {
+                LogUtil.i("exportBitmapFile, less than size" , file.length());
+                return;
+            }
             String fileName = file.getName();
             File exportFile = new File(exportDir, fileName);
             exportDir.mkdirs();
@@ -65,6 +70,7 @@ public class PicExportManager {
         });
 
     }
+
 
     public void exportBitmap(Bitmap bitmap) {
         runOnIo(() -> {
@@ -77,6 +83,10 @@ public class PicExportManager {
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.WEBP, 100, byteArrayOutputStream);
                 byte[] bitmapBytes = byteArrayOutputStream.toByteArray();
+                if (ModuleConfig.isLessThanMinSize(bitmapBytes.length)) {
+                    LogUtil.i("exportBitmapFile, less than size" , bitmapBytes.length);
+                    return;
+                }
                 String md5 = Md5Util.get(bitmapBytes);
                 String exportFileName = md5 + ".webp";
                 File exportFile = new File(exportDir, exportFileName);
@@ -169,6 +179,10 @@ public class PicExportManager {
         runOnIo(() -> {
             if (dataBytes == null || dataBytes.length == 0) {
                 LogUtil.d("exportByteArray: dataBytes is empty");
+                return;
+            }
+            if (ModuleConfig.isLessThanMinSize(dataBytes.length)) {
+                LogUtil.i("exportBitmapFile, less than size" , dataBytes.length);
                 return;
             }
             FileOutputStream fileOutputStream = null;

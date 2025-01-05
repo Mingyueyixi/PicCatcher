@@ -3,13 +3,13 @@ package com.pic.catcher.util.ext
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewParent
 import android.widget.TextView
 import com.lu.magic.util.AppUtil
-
 import com.lu.magic.util.ResUtil
 import com.lu.magic.util.SizeUtil
 import com.pic.catcher.util.ColorUtilX
+import com.pic.catcher.util.JSONX
+import org.json.JSONObject
 
 
 val sizeIntCache = HashMap<String, Int>()
@@ -76,7 +76,7 @@ fun View.setPadding(h: Int, v: Int) {
 val View.layoutInflate: LayoutInflater
     get() = LayoutInflater.from(this.context)
 
-fun View.contains(v:View?): Boolean {
+fun View.contains(v: View?): Boolean {
     if (v == null) {
         return false
     }
@@ -88,4 +88,35 @@ fun View.contains(v:View?): Boolean {
         }
     }
     return false
+}
+
+/**
+ * android的org.JSONObject.optString方法，存在奇怪的特性，当json为 {“key”: null}，
+ * optString 方法会返回 "null"，而不是 null
+ */
+fun JSONObject.optString2(name: String, fallback: String? = null): String? {
+    if (this.isNull(name)) {
+        return null
+    }
+    return try {
+        this.optString(name, fallback)
+    } catch (e: Exception) {
+        fallback
+    }
+}
+
+fun JSONObject.getLong2(name: String): Long {
+    return JSONX.getLong(this, name)
+}
+
+/**
+ * 获取JSONObject中的Long，对android的org.JSONObject.optLong进行修正。
+ * 原先的实现方法，对于value为string的值，通过转为Double，再转为Long，存在精度丢失的问题。
+ */
+fun JSONObject.optLong2(name: String, fallback: Long = 0): Long {
+    return JSONX.optLong(this, name, fallback)
+}
+
+fun String?.toJSONObject(): JSONObject? {
+    return JSONX.toJSONObject(this)
 }

@@ -47,7 +47,7 @@ class MainFragment : BaseFragment() {
 
         mListAdapter = object : CommonListAdapter<Int, ItemBindingViewHolder>() {
             init {
-                setData(arrayListOf(1, 2))
+                setData(arrayListOf(1, 2, 3))
             }
 
 
@@ -60,12 +60,17 @@ class MainFragment : BaseFragment() {
                             val itemValue = getItem(layoutPosition)
 
                             when (itemValue) {
-                                1 -> clickModuleCard()
-                                2 -> {
-                                    TipViewUtil.showLong(context,"""这个模块会将目标app的图片抓取，并保存到"${PicExportManager.getInstance().exportDir.parent}/app包名"下，请注意在不使用时，一定要将 LSP 管理器的选项关闭，以免一直抓取图片，影响app性能。""")
+                                1 -> {
+                                    clickModuleCard()
                                 }
-//                                3 -> jumpManagerConfigUI(Constrant.VALUE_INTENT_PLUGIN_MODE_MANAGER)
-//                                donateCardId -> AppRouter.routeDonateFeat(requireActivity())
+
+                                2 -> {
+                                    TipViewUtil.showLong(context, getString(R.string.app_module_des_format, PicExportManager.getInstance().exportDir.parent))
+                                }
+
+                                3 -> {
+                                    AppRouter.routeConfigPage(context)
+                                }
                             }
                         }
 
@@ -74,14 +79,15 @@ class MainFragment : BaseFragment() {
             }
 
             override fun onBindViewHolder(vh: ItemBindingViewHolder, position: Int, parent: ViewGroup) {
-                if (position != 0) {
+                val itemValue = getItem(position)
+                if (itemValue != 0) {
                     applyCommonItemRipple(vh.binding.layoutItem)
                 }
-                val position = getItem(position)
-                if (position == 1) {
-                    vh.binding.tvItemTitleSub2.text = "代码分支：" + buildInfo.branch
-                    vh.binding.tvItemTitleSub3.text = "提交哈希：" + buildInfo.commit
-                    vh.binding.tvItemTitleSub4.text = "构建时间：" + buildInfo.buildTime
+
+                if (itemValue == 1) {
+                    vh.binding.tvItemTitleSub2.text = getString(R.string.app_code_branch, buildInfo.branch)
+                    vh.binding.tvItemTitleSub3.text = getString(R.string.app_commit_hash_format, buildInfo.commit)
+                    vh.binding.tvItemTitleSub4.text = getString(R.string.app_build_time_format, buildInfo.buildTime)
                     vh.binding.tvItemTitleSub2.visibility = View.VISIBLE
                     vh.binding.tvItemTitleSub3.visibility = View.VISIBLE
                     vh.binding.tvItemTitleSub4.visibility = View.VISIBLE
@@ -91,7 +97,7 @@ class MainFragment : BaseFragment() {
                     vh.binding.tvItemTitleSub4.visibility = View.GONE
                 }
 
-                when (position) {
+                when (itemValue) {
                     1 -> {
                         if (com.pic.catcher.SelfHook.getInstance().isModuleEnable) {
                             vh.binding.ivItemIcon.setImageResource(R.drawable.ic_icon_check)
@@ -107,8 +113,14 @@ class MainFragment : BaseFragment() {
 
                     2 -> {
                         vh.binding.ivItemIcon.setImageResource(R.drawable.ic_icon_des)
-                        vh.binding.tvItemTitle.setText(R.string.config_des)
+                        vh.binding.tvItemTitle.setText(R.string.app_use_help)
                         vh.binding.tvItemTitleSub.setText(R.string.click_here_to_des)
+                    }
+
+                    3 -> {
+                        vh.binding.ivItemIcon.setImageResource(R.drawable.ic_icon_edit)
+                        vh.binding.tvItemTitle.setText(R.string.app_config)
+                        vh.binding.tvItemTitleSub.setText(R.string.click_here_to_edit_config)
                     }
 
                     donateCardId -> {

@@ -5,7 +5,23 @@
     <string name="module_have_active">模块已激活</string>
     <string name="module_version">模块版本</string>
     <string name="donate">捐赠</string>
-    <string name="config_des">使用说明</string>
+    <string name="app_use_help">使用说明</string>
     <string name="click_here_to_des">点击此处查看使用说明</string>
     <string name="donate_description">万水千山总是情，打赏一点也是情</string>
+    <string name="app_update_not_tip">不再提示</string>
+    <string name="app_update_dialog_title">更新提示</string>
+    <string name="app_update_confirm_tip_format">检查到新版本：%s，是否更新？</string>
+    <string name="app_toast_open_download_url_fail">下载链接打开失败</string>
+    <string name="app_update_not_found">未检查到新版本</string>
+    <string name="app_module_des_format">这个模块会将目标app的图片抓取，并保存到\"%1$s/app包名\"下，请注意在不使用时，一定要将 LSP 管理器的选项关闭，以免一直抓取图片，影响app性能。</string>
+    <string name="app_code_branch">代码分支：%s</string>
+    <string name="app_commit_hash_format">提交哈希：%s</string>
+    <string name="app_build_time_format">构建时间：%s</string>
+    <string name="app_config">应用配置</string>
+    <string name="click_here_to_edit_config">点击此处编辑配置</string>
+    <string name="app_title_config">配置</string>
+    <string name="config_catch_net_pic">抓取网络图片</string>
+    <string name="config_min_space_size">图片不小于（单位/kb）</string>
+    <string name="config_catch_webview_pic">抓取webView图片</string>
+    <string name="config_catch_glide_pic">抓取glide框架图片</string>
 </resources>

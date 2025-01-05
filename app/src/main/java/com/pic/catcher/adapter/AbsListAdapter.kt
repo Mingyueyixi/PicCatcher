@@ -7,6 +7,7 @@ import android.widget.BaseAdapter
 
 abstract class AbsListAdapter<VH: AbsListAdapter.ViewHolder> : BaseAdapter() {
 
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val vh = if (convertView == null) {
             onCreateViewHolder(parent, getItemViewType(position)).also {

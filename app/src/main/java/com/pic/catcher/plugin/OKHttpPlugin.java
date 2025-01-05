@@ -10,6 +10,7 @@ import com.lu.lposed.plugin.IPlugin;
 import com.lu.magic.util.AppUtil;
 import com.lu.magic.util.log.LogUtil;
 import com.pic.catcher.ClazzN;
+import com.pic.catcher.config.ModuleConfig;
 import com.pic.catcher.util.Regexs;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -34,6 +35,10 @@ public class OKHttpPlugin implements IPlugin {
 
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        if (!ModuleConfig.getInstance().isCatchNetPic()) {
+                            LogUtil.d("catchNetPic is false");
+                            return;
+                        }
                         Object response = XposedHelpers2.getObjectField(param.thisObject, "userResponse");
 
                         if (response == null) {
@@ -96,6 +101,10 @@ public class OKHttpPlugin implements IPlugin {
 
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        if (!ModuleConfig.getInstance().isCatchNetPic()) {
+                            LogUtil.d("catchNetPic is false");
+                            return;
+                        }
                         Object response = param.getResult();
                         if (response == null) {
                             return;

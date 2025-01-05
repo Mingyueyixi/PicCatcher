@@ -2,8 +2,10 @@ package com.pic.catcher.ui.vm
 
 import android.app.AlertDialog
 import android.content.Context
+import com.lu.magic.util.AppUtil
 import com.lu.magic.util.ToastUtil
 import com.lu.magic.util.log.LogUtil
+import com.pic.catcher.R
 import com.pic.catcher.base.BaseViewModel
 import com.pic.catcher.route.AppRouter
 import com.pic.catcher.util.AppUpdateCheckUtil
@@ -25,13 +27,13 @@ class AppUpdateViewModel : BaseViewModel() {
                 return@checkUpdate
             }
             AlertDialog.Builder(context)
-                .setTitle("更新提示")
-                .setMessage("检查到新版本：$name，是否更新？")
-                .setNegativeButton("取消", null)
-                .setNeutralButton("确定") { _, _ ->
+                .setTitle(R.string.app_update_dialog_title)
+                .setMessage(context.getString(R.string.app_update_confirm_tip_format, name))
+                .setNegativeButton(android.R.string.cancel, null)
+                .setNeutralButton(android.R.string.ok) { _, _ ->
                     openBrowserDownloadUrl(context, url)
                 }
-                .setPositiveButton("不再提示") { _, _ ->
+                .setPositiveButton(R.string.app_update_not_tip) { _, _ ->
                     AppUpdateCheckUtil.setCheckFlagOnEnter(false)
                 }
                 .setOnDismissListener {
@@ -41,7 +43,7 @@ class AppUpdateViewModel : BaseViewModel() {
         }
     }
 
-    fun checkOnce(context: Context, fallBackText: String = "未检查到新版本") {
+    fun checkOnce(context: Context, fallBackText: String = AppUtil.getContext().getString(R.string.app_update_not_found)) {
         if (hasOnCheckAction) {
             return
         }
@@ -53,10 +55,9 @@ class AppUpdateViewModel : BaseViewModel() {
                 return@checkUpdate
             }
             AlertDialog.Builder(context)
-                .setTitle("更新提示")
-                .setMessage("检查到新版本$name，是否更新？")
-                .setNegativeButton("取消", null)
-                .setNeutralButton("确定") { _, _ ->
+                .setMessage(context.getString(R.string.app_update_confirm_tip_format, name))
+                .setNegativeButton(android.R.string.cancel, null)
+                .setNeutralButton(android.R.string.ok) { _, _ ->
                     openBrowserDownloadUrl(context, url)
                 }
                 .setOnDismissListener {
@@ -70,7 +71,7 @@ class AppUpdateViewModel : BaseViewModel() {
         try {
             AppRouter.route(context, url)
         } catch (e: Exception) {
-            ToastUtil.show("下载链接打开失败")
+            ToastUtil.show(context.getString(R.string.app_toast_open_download_url_fail))
             LogUtil.w(e)
         }
     }

@@ -23,7 +23,7 @@ class AppUpdateCheckUtil {
             val currVersionCode = AppVersionUtil.getVersionCode()
             if (currVersionCode == -1) {
                 AppExecutor.executeMain {
-                    callBack.invoke("", "", IllegalStateException("无法获取当前版本号"))
+                    callBack.invoke("", "", IllegalStateException("cant't get app version"))
                 }
                 return
             }

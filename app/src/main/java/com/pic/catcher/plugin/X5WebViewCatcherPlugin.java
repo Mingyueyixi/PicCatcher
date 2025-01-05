@@ -8,6 +8,7 @@ import com.lu.lposed.api2.XposedHelpers2;
 import com.lu.lposed.plugin.IPlugin;
 import com.lu.magic.util.log.LogUtil;
 import com.pic.catcher.ClazzN;
+import com.pic.catcher.config.ModuleConfig;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
@@ -33,6 +34,10 @@ public class X5WebViewCatcherPlugin implements IPlugin {
                 new XC_MethodHook2() {
                     @Override
                     protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                        if (!ModuleConfig.getInstance().isCatchWebViewPic()) {
+                            LogUtil.d("catchWebViewPic is false");
+                            return;
+                        }
                         WebView webView = (WebView) param.args[0];
                         String url = (String) param.args[1];
                         LogUtil.d("WebViewClient.onLoadResource", "url=" + url);
@@ -40,5 +45,6 @@ public class X5WebViewCatcherPlugin implements IPlugin {
                     }
                 }
         );
+
     }
 }
