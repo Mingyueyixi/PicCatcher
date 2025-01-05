@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Picture Catcher</string>
+    <string name="app_xposed_description">App Image Grabber</string>
+    <string name="module_not_active">Module Not Active</string>
+    <string name="module_have_active">Module Active</string>
+    <string name="module_version">Module Version</string>
+    <string name="donate">Donate</string>
+    <string name="app_use_help">Usage Instructions</string>
+    <string name="click_here_to_des">Click here to view usage instructions</string>
+    <string name="donate_description">Your support means a lot to us</string>
+    <string name="app_update_not_tip">Do not show again</string>
+    <string name="app_update_dialog_title">Update Notification</string>
+    <string name="app_update_confirm_tip_format">New version detected: %s, would you like to update?</string>
+    <string name="app_toast_open_download_url_fail">Failed to open download link</string>
+    <string name="app_update_not_found">No new version detected</string>
+    <string name="app_module_des_format">This module will grab images from the target app and save them to \"%1$s/app_package_name\". Please make sure to disable the LSP Manager option when not in use to avoid continuous image grabbing, which may affect app performance.</string>
+    <string name="app_code_branch">Code Branch: %s</string>
+    <string name="app_commit_hash_format">Commit Hash: %s</string>
+    <string name="app_build_time_format">Build Time: %s</string>
+    <string name="app_config">App Configuration</string>
+    <string name="click_here_to_edit_config">Click here to edit configuration</string>
+    <string name="app_title_config">Configuration</string>
+    <string name="config_catch_net_pic">Catch Network Images</string>
+    <string name="config_min_space_size">Image size not less than (unit/kb)</string>
+    <string name="config_catch_webview_pic">Catch WebView Images</string>
+    <string name="config_catch_glide_pic">Catch Glide Framework Images</string>
+</resources>

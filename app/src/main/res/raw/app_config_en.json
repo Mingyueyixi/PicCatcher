@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "mainUi": {
+    "menuList": [
+      {
+        "title": "Feedback",
+        "link": "https://github.com/Mingyueyixi/PicCatcher/issues"
+      },
+      {
+        "title": "Communication Group",
+        "link": "https://t.me/MaskWechatX",
+        "appLink": {
+          "links": [
+            "tg:resolve?domain=MaskWechatX"
+          ]
+        }
+      },
+      {
+        "title": "About",
+        "link": "https://github.com/Mingyueyixi/PicCatcher"
+      }
+    ]
+  }
+}

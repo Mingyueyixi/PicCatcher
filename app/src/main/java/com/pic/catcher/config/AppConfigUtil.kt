@@ -4,15 +4,28 @@ import android.net.Uri
 import com.lu.magic.util.AppUtil
 import com.lu.magic.util.log.LogUtil
 import com.pic.catcher.R
+import com.pic.catcher.util.LanguageUtil
 import com.pic.catcher.util.TimeExpiredCalculator
 import com.pic.catcher.util.http.HttpConnectUtil
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+import java.io.InputStream
 
 class AppConfigUtil {
     companion object {
-        private val configFilePath = "res/raw/app_config.json"
+        private val configFilePath_zh = "res/raw/app_config.json"
+        private val configFilePath_en = "res/raw/app_config_en.json"
+        private  var configFilePath = configFilePath_zh
+            get() {
+                LogUtil.d("configFilePath: $field isEnglish", LanguageUtil.isEnglish())
+                if (LanguageUtil.isEnglish()) {
+                    return configFilePath_en
+                }
+                return configFilePath_zh
+
+            }
+
         val githubMainUrl = "https://raw.githubusercontent.com/Mingyueyixi/PicCatcher/main"
 
         //@main分支 或者@v1.6， commit id之类的，直接在写/main有时候不行
@@ -27,12 +40,17 @@ class AppConfigUtil {
             load()
             checkRemoteUpdate()
         }
-
+        private fun openAppConfigFromRawResource(): InputStream {
+            if (LanguageUtil.isEnglish()) {
+                return AppUtil.getContext().resources.openRawResource(R.raw.app_config_en)
+            }
+            return AppUtil.getContext().resources.openRawResource(R.raw.app_config)
+        }
 
         fun load() {
             val file = getLocalFile(configFilePath)
             var rawBin: ByteArray
-            val rawConfig: JSONObject = AppUtil.getContext().resources.openRawResource(R.raw.app_config).use {
+            val rawConfig: JSONObject = openAppConfigFromRawResource().use {
                 rawBin = it.readBytes()
                 JSONObject(rawBin.toString(Charsets.UTF_8))
             }
