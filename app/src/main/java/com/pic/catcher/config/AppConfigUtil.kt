@@ -14,9 +14,8 @@ import java.io.InputStream
 
 class AppConfigUtil {
     companion object {
-        private val configFilePath_zh = "res/raw/app_config.json"
-        private val configFilePath_en = "res/raw/app_config_en.json"
-        private  var configFilePath = configFilePath_zh
+        private val configFilePath_zh = "app/src/main/res/raw/app_config.json"
+        private val configFilePath_en = "app/src/main/res/raw/app_config_en.json"
             get() {
                 LogUtil.d("configFilePath: $field isEnglish", LanguageUtil.isEnglish())
                 if (LanguageUtil.isEnglish()) {
@@ -25,8 +24,8 @@ class AppConfigUtil {
                 return configFilePath_zh
 
             }
-
-        val githubMainUrl = "https://raw.githubusercontent.com/Mingyueyixi/PicCatcher/main"
+        private  var configFilePath = configFilePath_zh
+        val githubMainUrl = "https://raw.githubusercontent.com/Mingyueyixi/PicCatcher/refs/heads/main"
 
         //@main分支 或者@v1.6， commit id之类的，直接在写/main有时候不行
         //不指定版本，则取最后一个https://www.jsdelivr.com/?docs=gh
@@ -109,7 +108,7 @@ class AppConfigUtil {
 
 
         fun getReleaseNoteWebUrl(): String {
-            val filePath = "res/html/releases_note.html"
+            val filePath = "app/src/main/res/raw/releases_note.html"
             val cdnUrl = "$cdnMainUrl/$filePath"
             val githubUrl = "$githubMainUrl/$filePath"
 

@@ -155,9 +155,9 @@
                 'Accept': 'application/vnd.github+json'
             }
         })
-            .then(resp => resp.json())
-            .catch((error => fetch()))
-            .then(dataList => {
+            .then(resp => {
+                return resp.json()
+            }).then(dataList => {
                 let releaseNoteHtml = "<ul class='release-wrap'>"
                 let allDownloadCount = 0
                 for (let index = 0; index < dataList.length; index++) {

@@ -54,6 +54,7 @@ class JSONX {
             return source.optBoolean(name, fallback)
         }
 
+        @JvmStatic
         fun toJSONObject(s: String?): JSONObject? {
             if (s == null) {
                 return null
@@ -62,6 +63,21 @@ class JSONX {
                 JSONObject(s)
             } catch (e: Exception) {
                 JSONObject()
+            }
+        }
+
+        @JvmStatic
+        fun optString(json: JSONObject?, name: String, fallback: String? = null): String? {
+            if (json == null) {
+                return null
+            }
+            if (json.isNull(name)) {
+                return null
+            }
+            return try {
+                json.optString(name, fallback)
+            } catch (e: Exception) {
+                fallback
             }
         }
     }

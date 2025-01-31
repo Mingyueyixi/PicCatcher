@@ -2,7 +2,6 @@ package com.pic.catcher.util
 
 import android.content.SharedPreferences
 import com.pic.catcher.BuildConfig
-import de.robv.android.xposed.XSharedPreferences
 
 /**
  * xposed api
@@ -15,7 +14,7 @@ class LspUtil {
          */
         @JvmStatic
         fun getTable(table: String): SharedPreferences {
-            return XSharedPreferences(BuildConfig.APPLICATION_ID, table)
+            return de.robv.android.xposed.XSharedPreferences(BuildConfig.APPLICATION_ID, table)
         }
     }
 }

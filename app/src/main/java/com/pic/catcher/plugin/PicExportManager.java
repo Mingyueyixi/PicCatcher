@@ -103,7 +103,7 @@ public class PicExportManager {
                 tempStream = new FileOutputStream(exportFile);
                 IOUtil.writeByByte(bitmapBytes, tempStream);
                 LogUtil.i("exportBitmap: ", exportFile.getAbsolutePath());
-            } catch (FileNotFoundException e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
             } finally {
                 IOUtil.closeQuietly(tempStream);
@@ -168,7 +168,7 @@ public class PicExportManager {
                         }
                     }
                 }
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 LogUtil.d(e);
             }
         });

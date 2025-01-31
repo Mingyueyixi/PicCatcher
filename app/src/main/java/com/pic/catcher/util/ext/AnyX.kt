@@ -95,14 +95,7 @@ fun View.contains(v: View?): Boolean {
  * optString 方法会返回 "null"，而不是 null
  */
 fun JSONObject.optString2(name: String, fallback: String? = null): String? {
-    if (this.isNull(name)) {
-        return null
-    }
-    return try {
-        this.optString(name, fallback)
-    } catch (e: Exception) {
-        fallback
-    }
+    return JSONX.optString(this, name, fallback)
 }
 
 fun JSONObject.getLong2(name: String): Long {
