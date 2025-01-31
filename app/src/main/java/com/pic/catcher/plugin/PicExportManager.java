@@ -74,14 +74,21 @@ public class PicExportManager {
 
     public void exportBitmap(Bitmap bitmap) {
         runOnIo(() -> {
-            if (bitmap == null || bitmap.isRecycled()) {
+            if (bitmap == null) {
                 return;
             }
             FileOutputStream tempStream = null;
             try {
-                exportTempDir.mkdirs();
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.WEBP, 100, byteArrayOutputStream);
+                synchronized (bitmap) {
+                    // 多线程保护，同时将创建文件夹方法放到后面处理，避免异步线程回收bitmap导致compress崩溃
+                    if (bitmap.isRecycled()) {
+                        LogUtil.i("exportBitmapFile, bitmap is isRecycled， ignore" );
+                        return;
+                    }
+                    bitmap.compress(Bitmap.CompressFormat.WEBP, 100, byteArrayOutputStream);
+                }
+                exportTempDir.mkdirs();
                 byte[] bitmapBytes = byteArrayOutputStream.toByteArray();
                 if (ModuleConfig.isLessThanMinSize(bitmapBytes.length)) {
                     LogUtil.i("exportBitmapFile, less than size" , bitmapBytes.length);
