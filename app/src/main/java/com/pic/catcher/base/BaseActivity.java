@@ -63,4 +63,5 @@ public class BaseActivity extends Activity implements CustomLifecycleOwner{
         super.onDestroy();
         mCustomLifecycleOwnerDelegate.setCurrentState(CustomLifecycle.State.DESTROYED);
     }
+
 }

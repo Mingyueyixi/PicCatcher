@@ -1,6 +1,6 @@
 package com.pic.catcher.base
 
-import com.pic.catcher.base.ViewModelProviders.Companion.cleanViewModelStore
+import com.pic.catcher.base.ViewModelProviders.Companion.removeViewModel
 import com.pic.catcher.base.ViewModelProviders.Companion.getViewModel
 import com.pic.catcher.base.ViewModelProviders.Companion.putViewModel
 import com.pic.catcher.base.ViewModelProviders.Factory
@@ -9,7 +9,7 @@ class ViewModelProvider(private val owner: CustomLifecycleOwner) {
     private val lifecycle: CustomLifecycle = object : CustomLifecycle {
         override fun onLifeStateChanged(source: CustomLifecycleOwner, state: CustomLifecycle.State) {
             if (state == CustomLifecycle.State.DESTROYED) {
-                cleanViewModelStore(owner)
+                removeViewModel(owner)
             }
         }
     }
@@ -53,7 +53,7 @@ class ViewModelProviders {
             map[getViewModelStoreKey(viewModel)] = viewModel
         }
 
-        internal fun cleanViewModelStore(owner: CustomLifecycleOwner) {
+        internal fun removeViewModel(owner: CustomLifecycleOwner) {
             viewModelStore.remove(getLifecycleOwnerKey(owner))
         }
 

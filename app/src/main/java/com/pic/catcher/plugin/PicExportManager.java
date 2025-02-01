@@ -14,11 +14,14 @@ import com.lu.magic.util.IOUtil;
 import com.lu.magic.util.log.LogUtil;
 import com.lu.magic.util.thread.AppExecutor;
 import com.pic.catcher.config.ModuleConfig;
+import com.pic.catcher.ui.config.PicFormat;
 import com.pic.catcher.util.FileUtils;
 import com.pic.catcher.util.Md5Util;
 import com.pic.catcher.util.PicUtil;
 import com.pic.catcher.util.Regexs;
 import com.pic.catcher.util.http.HttpConnectUtil;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -59,14 +62,14 @@ public class PicExportManager {
                 return;
             }
             if (ModuleConfig.isLessThanMinSize(file.length())) {
-                LogUtil.i("exportBitmapFile, less than size" , file.length());
+                LogUtil.d("exportBitmapFile, less than size", file.length());
                 return;
             }
             String fileName = file.getName();
             File exportFile = new File(exportDir, fileName);
             exportDir.mkdirs();
             FileUtils.copyFile(file, exportFile);
-            LogUtil.i("exportBitmapFile: " + exportFile.getAbsolutePath());
+            LogUtil.d("exportBitmapFile: " + exportFile.getAbsolutePath());
         });
 
     }
@@ -80,29 +83,40 @@ public class PicExportManager {
             FileOutputStream tempStream = null;
             try {
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                @NotNull String formatName = ModuleConfig.getInstance().getPicDefaultSaveFormat();
                 synchronized (bitmap) {
                     // 多线程保护，同时将创建文件夹方法放到后面处理，避免异步线程回收bitmap导致compress崩溃
                     if (bitmap.isRecycled()) {
-                        LogUtil.i("exportBitmapFile, bitmap is isRecycled， ignore" );
+                        LogUtil.d("exportBitmapFile, bitmap is isRecycled， ignore");
                         return;
                     }
-                    bitmap.compress(Bitmap.CompressFormat.WEBP, 100, byteArrayOutputStream);
+                    if (PicFormat.JPG.equals(formatName)) {
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+                    } else if (PicFormat.PNG.equals(formatName)) {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    } else {
+                        bitmap.compress(Bitmap.CompressFormat.WEBP, 100, byteArrayOutputStream);
+                    }
                 }
-                exportTempDir.mkdirs();
                 byte[] bitmapBytes = byteArrayOutputStream.toByteArray();
-                if (ModuleConfig.isLessThanMinSize(bitmapBytes.length)) {
-                    LogUtil.i("exportBitmapFile, less than size" , bitmapBytes.length);
+                if (bitmapBytes.length == 0) {
+                    LogUtil.d("exportBitmapFile, bitmapBytes is null or size is 0， ignore");
                     return;
                 }
+                if (ModuleConfig.isLessThanMinSize(bitmapBytes.length)) {
+                    LogUtil.d("exportBitmapFile, less than size", bitmapBytes.length);
+                    return;
+                }
+                exportTempDir.mkdirs();
                 String md5 = Md5Util.get(bitmapBytes);
-                String exportFileName = md5 + ".webp";
+                String exportFileName = md5 + "." + formatName;
                 File exportFile = new File(exportDir, exportFileName);
                 if (exportFile.exists()) {
                     return;
                 }
                 tempStream = new FileOutputStream(exportFile);
                 IOUtil.writeByByte(bitmapBytes, tempStream);
-                LogUtil.i("exportBitmap: ", exportFile.getAbsolutePath());
+                LogUtil.d("exportBitmap: ", exportFile.getAbsolutePath());
             } catch (Throwable e) {
                 e.printStackTrace();
             } finally {
@@ -176,6 +190,10 @@ public class PicExportManager {
     }
 
     public void exportByteArray(final byte[] dataBytes, String lastName) {
+        if (dataBytes == null || dataBytes.length == 0) {
+            LogUtil.d("exportByteArray: dataBytes is empty");
+            return;
+        }
         if (TextUtils.isEmpty(lastName)) {
             lastName = PicUtil.detectImageType(dataBytes, "bin");
         }
@@ -184,12 +202,8 @@ public class PicExportManager {
         }
         final String finalLastName = lastName;
         runOnIo(() -> {
-            if (dataBytes == null || dataBytes.length == 0) {
-                LogUtil.d("exportByteArray: dataBytes is empty");
-                return;
-            }
             if (ModuleConfig.isLessThanMinSize(dataBytes.length)) {
-                LogUtil.i("exportBitmapFile, less than size" , dataBytes.length);
+                LogUtil.d("exportBitmapFile, less than size", dataBytes.length);
                 return;
             }
             FileOutputStream fileOutputStream = null;
@@ -203,7 +217,7 @@ public class PicExportManager {
                 this.exportDir.mkdirs();
                 fileOutputStream = new FileOutputStream(file);
                 IOUtil.writeByByte(dataBytes, fileOutputStream);
-                LogUtil.i("exportByteArray: ", file);
+                LogUtil.d("exportByteArray: ", file);
             } catch (Throwable th) {
 //                th.printStackTrace();
                 LogUtil.d(th);

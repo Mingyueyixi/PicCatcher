@@ -3,20 +3,29 @@ package com.pic.catcher.ui
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
+import com.lu.magic.util.ToastUtil
 import com.lu.magic.util.log.LogUtil
 import com.pic.catcher.R
 import com.pic.catcher.adapter.BindingListAdapter
+import com.pic.catcher.adapter.CommonListAdapter
 import com.pic.catcher.base.BindingActivity
 import com.pic.catcher.bean.EditItem
 import com.pic.catcher.bean.ItemType
+import com.pic.catcher.bean.SpinnerItem
 import com.pic.catcher.bean.SwitchItem
 import com.pic.catcher.bean.TextItem
 import com.pic.catcher.config.ModuleConfig
 import com.pic.catcher.databinding.ActivityConfigBinding
 import com.pic.catcher.databinding.ItemConfigEditBinding
+import com.pic.catcher.databinding.ItemConfigSpinnerBinding
 import com.pic.catcher.databinding.ItemConfigSwitchBinding
 import com.pic.catcher.databinding.ItemConfigTextBinding
+import com.pic.catcher.ui.config.PicFormat
 import com.pic.catcher.util.ext.dp
 import com.pic.catcher.util.ext.setPadding
 import com.pic.catcher.util.ext.toIntElse
@@ -25,6 +34,7 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
 
     private lateinit var mAdapter: ConfigListAdapter
     private lateinit var moduleConfig: ModuleConfig
+    private lateinit var mConfigSourceText : String
 
     override fun onInflateBinding(): ActivityConfigBinding {
         return ActivityConfigBinding.inflate(layoutInflater, null, false)
@@ -32,6 +42,8 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
 
     override fun initView() {
         moduleConfig = ModuleConfig.instance
+        mConfigSourceText = moduleConfig.source.toString()
+
         // 设置标题
         mBinding.toolbar.setTitle(R.string.app_title_config)
         mBinding.toolbar.setNavigationIcon(R.drawable.ic_back)
@@ -41,6 +53,14 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
         }
 
         mAdapter = ConfigListAdapter().apply {
+            val picFormatList = listOf<String>(
+                PicFormat.WEBP,
+                PicFormat.JPG,
+                PicFormat.PNG
+            )
+            val picSelectFormatIndex = picFormatList.indexOfFirst {
+                it == moduleConfig.picDefaultSaveFormat
+            }
             setData(
                 listOf(
                     SwitchItem(getString(R.string.config_catch_net_pic), moduleConfig.isCatchNetPic).apply {
@@ -61,9 +81,15 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
                             moduleConfig.isCatchGlidePic = checked
                         }
                     },
+
                     EditItem(getString(R.string.config_min_space_size), moduleConfig.minSpaceSize.toString(), InputType.TYPE_CLASS_NUMBER).apply {
                         addPropertyChangeListener {
                             moduleConfig.minSpaceSize = value.toIntElse(0)
+                        }
+                    },
+                    SpinnerItem(getString(R.string.config_save_pic_default_format), picFormatList, picSelectFormatIndex).apply {
+                        addPropertyChangeListener {
+                            moduleConfig.picDefaultSaveFormat = picFormatList[selectedIndex]
                         }
                     },
                 )
@@ -75,12 +101,19 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
     override fun onDestroy() {
         super.onDestroy()
         moduleConfig.save()
+        if (!moduleConfig.toJson().equals(mConfigSourceText)) {
+            ToastUtil.showLong(this, getString(R.string.toast_plugin_config_change_tip))
+        }
     }
 
 
     inner class ConfigListAdapter : BindingListAdapter<ItemType>() {
         override fun getViewTypeCount(): Int {
-            return 3
+            return 4
+        }
+
+        override fun setData(data: List<ItemType>): CommonListAdapter<ItemType, BindingHolder> {
+            return super.setData(data)
         }
 
         override fun getItemViewType(position: Int): Int {
@@ -95,6 +128,10 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
 
                 is TextItem -> {
                     ItemType.TYPE_TEXT
+                }
+
+                is SpinnerItem -> {
+                    ItemType.TYPE_SPINNER
                 }
 
                 else -> {
@@ -112,6 +149,10 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
 
                 ItemType.TYPE_EDIT -> {
                     BindingHolder(ItemConfigEditBinding.inflate(layoutInflater, parent, false))
+                }
+
+                ItemType.TYPE_SPINNER -> {
+                    BindingHolder(ItemConfigSpinnerBinding.inflate(layoutInflater, parent, false))
                 }
 
                 else -> {
@@ -164,6 +205,29 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
                     }
                     holder.itemEdit.setTag(holder.itemEdit.id, textWatcher)
                     holder.itemEdit.addTextChangedListener(textWatcher)
+                }
+
+                is SpinnerItem -> {
+                    val holder = vh.binding as ItemConfigSpinnerBinding
+                    holder.itemTitle.text = item.title
+                    holder.itemSpinner.adapter = ArrayAdapter(vh.itemView.context, android.R.layout.simple_spinner_item, item.items)
+                    holder.itemSpinner.setSelection(item.selectedIndex)
+                    holder.itemSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            item.selectedIndex = position
+                            holder.itemDesc.text = when (item.selectedItem ?: "") {
+                                PicFormat.WEBP -> getString(R.string.spinner_des_webp_format)
+                                PicFormat.PNG -> getString(R.string.spinner_des_png_format)
+                                PicFormat.JPG -> getString(R.string.spinner_des_jpg_format)
+                                else -> ""
+                            }
+                        }
+
+                        override fun onNothingSelected(parent: AdapterView<*>?) {
+
+                        }
+
+                    }
                 }
 
                 is TextItem -> {

@@ -31,7 +31,7 @@ while true; do
         echo "Command executed successfully."
         break
     else
-        echo "Command failed with return code: $retval. Retrying in $duration seconds..."
+        echo "Command failed with return code: $retval. Retry after $duration seconds..."
         sleep $duration  # 使用提供的duration值等待
     fi
 done

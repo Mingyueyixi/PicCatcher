@@ -40,6 +40,13 @@ class ModuleConfig(var source: JSONObject) {
             source.put("minSpaceSize", value)
         }
 
+    var picDefaultSaveFormat: String = "webp"
+        get() = JSONX.optString(source, "picDefaultSaveFormat", "webp") ?: "webp"
+        set(value) {
+            field = value
+            source.put("picDefaultSaveFormat", value)
+        }
+
     fun toJson(): String {
         return source.toString()
     }

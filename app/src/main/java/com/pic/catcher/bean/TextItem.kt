@@ -14,6 +14,7 @@ open class TextItem(name: CharSequence, value: CharSequence? = null) : UiItem() 
         }
     }
 
+
     companion object {
         @JvmStatic
         fun fromJson(json: JSONObject?): TextItem? {

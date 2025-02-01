@@ -24,4 +24,9 @@
     <string name="config_min_space_size">Image size not less than (unit/kb)</string>
     <string name="config_catch_webview_pic">Catch WebView Images</string>
     <string name="config_catch_glide_pic">Catch Glide Framework Images</string>
+    <string name="config_save_pic_default_format">Unknown image for save format</string>
+    <string name="spinner_des_jpg_format">JPG format, low image quality, small file size, does not support transparent pixels</string>
+    <string name="spinner_des_webp_format">WebP is an image format designed by Google, offering high image quality with better compression than JPEG, and supports transparent pixels</string>
+    <string name="spinner_des_png_format">PNG format, high image quality, supports transparent pixels</string>
+    <string name="toast_plugin_config_change_tip">Config changed. Target app need restart</string>
 </resources>

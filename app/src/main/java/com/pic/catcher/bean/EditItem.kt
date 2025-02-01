@@ -19,4 +19,5 @@ class EditItem(name: CharSequence, value: CharSequence? = null, inputType: Int =
             return EditItem(json.optString2("name") ?: "", json.optString2("value"))
         }
     }
+
 }

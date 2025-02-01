@@ -24,4 +24,9 @@
     <string name="config_min_space_size">图片不小于（单位/kb）</string>
     <string name="config_catch_webview_pic">抓取webView图片</string>
     <string name="config_catch_glide_pic">抓取glide框架图片</string>
+    <string name="config_save_pic_default_format">当图片格式未知时，保存格式</string>
+    <string name="spinner_des_jpg_format">jpg格式，图片质量低，大小小，不支持透明像素</string>
+    <string name="spinner_des_webp_format">webp是google设计的一种图片格式，图片质量高，压缩质量比jpeg更高，支持透明像素</string>
+    <string name="spinner_des_png_format">png格式，图片质量高，支持透明像素</string>
+    <string name="toast_plugin_config_change_tip">配置已变更，目标应用需重启</string>
 </resources>
