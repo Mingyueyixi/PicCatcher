@@ -1,10 +1,15 @@
 package com.pic.catcher.ui
 
+import android.os.Build
+import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
@@ -26,6 +31,7 @@ import com.pic.catcher.databinding.ItemConfigSpinnerBinding
 import com.pic.catcher.databinding.ItemConfigSwitchBinding
 import com.pic.catcher.databinding.ItemConfigTextBinding
 import com.pic.catcher.ui.config.PicFormat
+import com.pic.catcher.util.BarUtils
 import com.pic.catcher.util.ext.dp
 import com.pic.catcher.util.ext.setPadding
 import com.pic.catcher.util.ext.toIntElse
@@ -34,7 +40,31 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
 
     private lateinit var mAdapter: ConfigListAdapter
     private lateinit var moduleConfig: ModuleConfig
-    private lateinit var mConfigSourceText : String
+    private lateinit var mConfigSourceText: String
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+        super.onCreate(savedInstanceState, persistentState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.decorView.setOnApplyWindowInsetsListener { view, insets ->
+                LogUtil.d("Display Cutout", "onApplyWindowInsets")
+                val displayCutout = insets.displayCutout
+                if (displayCutout != null) {
+                    // 获取刘海区域的高度
+                    val safeInsetTop = displayCutout.safeInsetTop
+                    LogUtil.d("Display Cutout", "Safe Inset Top: $safeInsetTop")
+
+                    // 设置Toolbar的Padding
+                    mBinding.toolbar.setPadding(0, safeInsetTop, 0, 0)
+                } else {
+                    LogUtil.d("Display Cutout", "No display cutout")
+                }
+                return@setOnApplyWindowInsetsListener insets
+            }
+        } else {
+            mBinding.toolbar.setPadding(0, BarUtils.getStatusBarHeight(), 0, 0)
+        }
+
+    }
 
     override fun onInflateBinding(): ActivityConfigBinding {
         return ActivityConfigBinding.inflate(layoutInflater, null, false)
@@ -51,7 +81,6 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
         mBinding.toolbar.setNavigationOnClickListener {
             finish()
         }
-
         mAdapter = ConfigListAdapter().apply {
             val picFormatList = listOf<String>(
                 PicFormat.WEBP,
@@ -82,12 +111,20 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
                         }
                     },
 
-                    EditItem(getString(R.string.config_min_space_size), moduleConfig.minSpaceSize.toString(), InputType.TYPE_CLASS_NUMBER).apply {
+                    EditItem(
+                        getString(R.string.config_min_space_size),
+                        moduleConfig.minSpaceSize.toString(),
+                        InputType.TYPE_CLASS_NUMBER
+                    ).apply {
                         addPropertyChangeListener {
                             moduleConfig.minSpaceSize = value.toIntElse(0)
                         }
                     },
-                    SpinnerItem(getString(R.string.config_save_pic_default_format), picFormatList, picSelectFormatIndex).apply {
+                    SpinnerItem(
+                        getString(R.string.config_save_pic_default_format),
+                        picFormatList,
+                        picSelectFormatIndex
+                    ).apply {
                         addPropertyChangeListener {
                             moduleConfig.picDefaultSaveFormat = picFormatList[selectedIndex]
                         }
@@ -210,7 +247,8 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
                 is SpinnerItem -> {
                     val holder = vh.binding as ItemConfigSpinnerBinding
                     holder.itemTitle.text = item.title
-                    holder.itemSpinner.adapter = ArrayAdapter(vh.itemView.context, android.R.layout.simple_spinner_item, item.items)
+                    holder.itemSpinner.adapter =
+                        ArrayAdapter(vh.itemView.context, android.R.layout.simple_spinner_item, item.items)
                     holder.itemSpinner.setSelection(item.selectedIndex)
                     holder.itemSpinner.onItemSelectedListener = object : OnItemSelectedListener {
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

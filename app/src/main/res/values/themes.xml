@@ -14,18 +14,14 @@
         <!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->
     </style>
-
-    <style name="Theme.PicCatcher.Transparent" parent="Theme.PicCatcher">
-        <item name="android:windowBackground">@android:color/transparent</item>
+    <style name="Theme.PicCatcher.NoActionBar" parent="Theme.PicCatcher">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">@null</item>
+    </style>
+    <style name="Theme.PicCatcher.Transparent" parent="Theme.PicCatcher.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
     </style>
-    <style name="Theme.PicCatcher.NoActionBar" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
-        <item name="android:colorPrimary">@color/app_primary</item>
-        <item name="android:statusBarColor">@color/app_primary</item>
-    </style>
+
 </resources>
