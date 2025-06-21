@@ -10,6 +10,7 @@ import com.lu.magic.ui.recycler.MultiAdapter
 import com.lu.magic.ui.recycler.MultiViewHolder
 import com.lu.magic.ui.recycler.SimpleItemType
 import com.pic.testapp.action.Action
+import com.pic.testapp.action.FrescoLoadAction
 import com.pic.testapp.action.LoadBitmapAction
 import com.pic.testapp.action.LoadHttpPicAction
 import com.pic.testapp.base.BaseFragment
@@ -49,6 +50,7 @@ class MainFragment : BindingFragment<FragMainLayoutBinding>() {
                 ItemBean("loadBitmap", LoadBitmapAction()),
                 ItemBean("webview", WebViewFragment::class.java),
                 ItemBean("x5Webview", X5WebViewFragment::class.java),
+                ItemBean("fresco框架加载图片", FrescoLoadAction()),
             )
         )
     }

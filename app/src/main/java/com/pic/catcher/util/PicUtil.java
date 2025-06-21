@@ -1,6 +1,9 @@
 package com.pic.catcher.util;
 
 
+import android.text.TextUtils;
+import android.webkit.MimeTypeMap;
+
 import com.lu.magic.util.IOUtil;
 import com.lu.magic.util.log.LogUtil;
 
@@ -9,10 +12,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 
 
 public abstract class PicUtil {
+
+
     public static String detectImageType(File file, String fallback) {
         if (!file.exists()) {
             return fallback;
@@ -71,7 +75,62 @@ public abstract class PicUtil {
         if (data[8] != 'W' || data[9] != 'E' || data[10] != 'B' || data[11] != 'P') {
             return false;
         }
-
         return true;
+    }
+
+    public static String getImageType(String fileName, byte[] data, String fallback) {
+        String result = MimeTypeMap.getSingleton().getExtensionFromMimeType(fileName);
+        if (!PicUtil.isPicSuffix(result)) {
+            result = detectImageType(data, result);
+        }
+        if (TextUtils.isEmpty(result)) {
+            return fallback;
+        }
+        if ("jpeg".equalsIgnoreCase(result)) {
+            result = "jpg";
+        }
+        return result;
+    }
+
+
+    public static String getImageType(String fileName, InputStream inputStream, String fallback) {
+        String result = MimeTypeMap.getSingleton().getExtensionFromMimeType(fileName);
+        if (!PicUtil.isPicSuffix(result)) {
+            result = detectImageType(inputStream, result);
+        }
+        if (TextUtils.isEmpty(result)) {
+            result = fallback;
+        }
+        if ("jpeg".equalsIgnoreCase(result)) {
+            result = "jpg";
+        }
+        return result;
+    }
+
+    public static String getImageType(String fileName, File file, String fallback) {
+        String result = MimeTypeMap.getSingleton().getExtensionFromMimeType(fileName);
+        if (!PicUtil.isPicSuffix(result)) {
+            result = detectImageType(file, result);
+        }
+        if (TextUtils.isEmpty(result)) {
+            result = fallback;
+        }
+        if ("jpeg".equalsIgnoreCase(result)) {
+            result = "jpg";
+        }
+        return result;
+    }
+
+    /**
+     * 判断是图片后缀
+     *
+     * @param text
+     * @return
+     */
+    public static boolean isPicSuffix(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return false;
+        }
+        return Regexs.PIC_EXT.matcher(text).find();
     }
 }

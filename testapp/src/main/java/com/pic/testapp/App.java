@@ -2,6 +2,9 @@ package com.pic.testapp;
 
 import android.app.Application;
 import android.content.Context;
+import android.view.View;
+
+import com.facebook.drawee.backends.pipeline.Fresco;
 
 /**
  * @author Lu
@@ -22,4 +25,9 @@ public class App extends Application {
         super.attachBaseContext(base);
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Fresco.initialize(this);
+    }
 }

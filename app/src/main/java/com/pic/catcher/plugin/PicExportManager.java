@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
 
@@ -27,7 +28,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -136,7 +139,7 @@ public class PicExportManager {
     private void exportHttpPicUrlIfNeed(String url, String fileEx) {
         HttpConnectUtil.request("GET", url, null, null, true,
                 response -> {
-                    if (!Regexs.PIC_EXT.matcher(fileEx).find()) {
+                    if (!PicUtil.isPicSuffix(fileEx)) {
                         //图片不知道
                         Map<String, List<String>> headers = response.getHeader();
                         List<String> contentType = headers.get("Content-Type");
@@ -145,7 +148,7 @@ public class PicExportManager {
                             return null;
                         }
                         String guessFileEx = MimeTypeMap.getSingleton().getExtensionFromMimeType(contentType.get(0));
-                        if (!Regexs.PIC_EXT.matcher(guessFileEx).find()) {
+                        if (!PicUtil.isPicSuffix(guessFileEx)) {
                             //不是图片
                             return null;
                         }
@@ -172,21 +175,80 @@ public class PicExportManager {
                     exportHttpPicUrlIfNeed(url, fileEx);
                 } else if (URLUtil.isFileUrl(url)) {
                     File file = new File(URI.create(url));
-                    if (Regexs.PIC_EXT.matcher(fileEx).find()) {
+                    if (PicUtil.isPicSuffix(fileEx)) {
                         exportBitmapFile(file);
                     } else {
                         //判断文件内容是否是图片格式
                         fileEx = PicUtil.detectImageType(file, "");
-                        if (Regexs.PIC_EXT.matcher(fileEx).find()) {
+                        if (PicUtil.isPicSuffix(fileEx)) {
                             exportBitmapFile(file);
                         }
                     }
+                } else if (URLUtil.isAssetUrl(url)) {
+                    // 读取资源文件
+                    exportAsset(url);
+                } else if (URLUtil.isContentUrl(url)) {
+                    exportContentUri(url);
                 }
             } catch (Throwable e) {
                 LogUtil.d(e);
             }
         });
 
+    }
+
+    /**
+     * 读取content://
+     *
+     * @param url
+     */
+    private void exportContentUri(String url) {
+        try {
+            ContentResolver contentResolver = AppUtil.getContext().getContentResolver();
+            Uri uri = Uri.parse(url);
+            // 打开输入流
+            InputStream inputStream = contentResolver.openInputStream(uri);
+            if (inputStream == null) {
+                Log.d("ExportContentUri", "无法打开输入流:" + uri);
+                return;
+            }
+            String fileName = URLUtil.guessFileName(url, null, null);
+            byte[] data = IOUtil.readToBytes(inputStream);
+            if (TextUtils.isEmpty(fileName)) {
+                fileName = Md5Util.get(data) + "." + PicUtil.getImageType(fileName, data, "bin");
+            } else {
+                fileName = getOutputName(fileName, data);
+            }
+            exportByteArray(IOUtil.readToBytes(inputStream), fileName);
+        } catch (Exception e) {
+            LogUtil.d(e);
+        }
+
+    }
+
+    private void exportAsset(String url) {
+        try {
+            String assetName = url.substring(url.indexOf("://") + 3);
+            InputStream inputStream = AppUtil.getContext().getAssets().open(assetName);
+            byte[] bytes = IOUtil.readToBytes(inputStream);
+
+            exportByteArray(bytes, getOutputName(assetName, bytes));
+        } catch (Exception e) {
+            LogUtil.d(e);
+        }
+    }
+
+    private static String getOutputName(String assetName, byte[] dataBytes) {
+        String outputName = assetName.replace("/", "_");
+        String suffix = PicUtil.getImageType(assetName, dataBytes, "bin");
+
+        if (!assetName.contains(".")) {
+            outputName = outputName + "_" + Md5Util.get(dataBytes) + "." + suffix;
+        } else {
+            int dotIndex = assetName.lastIndexOf(".");
+            outputName = outputName.substring(0, dotIndex) + "_" + Md5Util.get(dataBytes) + "." + suffix;
+        }
+        return outputName;
     }
 
     public void exportByteArray(final byte[] dataBytes, String lastName) {

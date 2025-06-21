@@ -16,6 +16,7 @@ import com.lu.magic.util.AppUtil;
 import com.lu.magic.util.log.LogUtil;
 import com.lu.magic.util.log.SimpleLogger;
 import com.pic.catcher.plugin.BitmapCatcherPlugin;
+import com.pic.catcher.plugin.FrescoCatcherPlugin;
 import com.pic.catcher.plugin.GlideCatcherPlugin;
 import com.pic.catcher.plugin.OKHttpPlugin;
 import com.pic.catcher.plugin.WebViewCatcherPlugin;
@@ -44,7 +45,6 @@ public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit, 
             return;
         }
         isHookEntryHandle = true;
-
 
         LogUtil.setLogger(new SimpleLogger() {
             @Override
@@ -196,7 +196,8 @@ public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit, 
                 BitmapCatcherPlugin.class,
                 GlideCatcherPlugin.class,
                 WebViewCatcherPlugin.class,
-                OKHttpPlugin.class
+                OKHttpPlugin.class,
+                FrescoCatcherPlugin.class
         ).handleHooks(context, lpparam);
 
     }

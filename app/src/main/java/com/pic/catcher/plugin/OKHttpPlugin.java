@@ -11,6 +11,7 @@ import com.lu.magic.util.AppUtil;
 import com.lu.magic.util.log.LogUtil;
 import com.pic.catcher.ClazzN;
 import com.pic.catcher.config.ModuleConfig;
+import com.pic.catcher.util.PicUtil;
 import com.pic.catcher.util.Regexs;
 
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -52,7 +53,7 @@ public class OKHttpPlugin implements IPlugin {
                             return;
                         }
                         String guessFileEx = MimeTypeMap.getSingleton().getExtensionFromMimeType(contentType);
-                        if (TextUtils.isEmpty(guessFileEx) || !Regexs.PIC_EXT.matcher(guessFileEx).find()) {
+                        if (!PicUtil.isPicSuffix(guessFileEx)) {
                             //不是图片
                             return;
                         }
@@ -115,7 +116,7 @@ public class OKHttpPlugin implements IPlugin {
                             return;
                         }
                         String guessFileEx = MimeTypeMap.getSingleton().getExtensionFromMimeType(contentType);
-                        if (TextUtils.isEmpty(guessFileEx) || !Regexs.PIC_EXT.matcher(guessFileEx).find()) {
+                        if (!PicUtil.isPicSuffix(guessFileEx)) {
                             //不是图片
                             return;
                         }

@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.widget.ImageView;
 
-import com.pic.testapp.R;
-
 /**
  * @author Lu
  * @date 2024/10/26 19:43
