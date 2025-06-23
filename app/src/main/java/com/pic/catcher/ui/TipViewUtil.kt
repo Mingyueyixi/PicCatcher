@@ -12,6 +12,7 @@ import android.widget.TextView
 import com.lu.magic.util.SizeUtil
 import com.lu.magic.util.ToastUtil
 import com.pic.catcher.util.ActivityUtils
+import com.pic.catcher.util.BarUtils
 import java.lang.ref.WeakReference
 
 /**
@@ -29,6 +30,7 @@ class TipViewUtil {
                 ToastUtil.showLong(text.toString())
                 return
             }
+
             val textView = TextView(parent!!.context)
             val dp16 = SizeUtil.dp2px(parent.resources, 16f).toInt()
             textView.setPadding(dp16, dp16, dp16, dp16)
@@ -44,11 +46,10 @@ class TipViewUtil {
             // 设置渐变方向
 //        gradientDrawable.setOrientation(GradientDrawable.Orientation.TOP_BOTTOM);
             textView.background = gradientDrawable
-
             val lp = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            lp.setMargins(dp16, dp16, dp16, dp16)
+            lp.setMargins(dp16, dp16 + BarUtils.getStatusBarHeight(), dp16, dp16 + BarUtils.getNavBarHeight())
             lp.gravity = Gravity.BOTTOM
-            val content = if (parent is FrameLayout) {
+            val tipContent = if (parent is FrameLayout) {
                 textView
             } else {
                 lp.width = ViewGroup.LayoutParams.MATCH_PARENT
@@ -58,9 +59,9 @@ class TipViewUtil {
                     addView(textView)
                 }
             }
-            parent.addView(content, lp)
+            parent.addView(tipContent, lp)
             val parentRef = WeakReference(parent)
-            val contentRef = WeakReference<View>(content)
+            val contentRef = WeakReference<View>(tipContent)
             parent.postDelayed({
                 val p = parentRef.get()
                 val v = contentRef.get()

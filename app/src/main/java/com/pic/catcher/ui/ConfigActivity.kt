@@ -42,29 +42,6 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
     private lateinit var moduleConfig: ModuleConfig
     private lateinit var mConfigSourceText: String
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            window.decorView.setOnApplyWindowInsetsListener { view, insets ->
-                LogUtil.d("Display Cutout", "onApplyWindowInsets")
-                val displayCutout = insets.displayCutout
-                if (displayCutout != null) {
-                    // 获取刘海区域的高度
-                    val safeInsetTop = displayCutout.safeInsetTop
-                    LogUtil.d("Display Cutout", "Safe Inset Top: $safeInsetTop")
-
-                    // 设置Toolbar的Padding
-                    mBinding.toolbar.setPadding(0, safeInsetTop, 0, 0)
-                } else {
-                    LogUtil.d("Display Cutout", "No display cutout")
-                }
-                return@setOnApplyWindowInsetsListener insets
-            }
-        } else {
-            mBinding.toolbar.setPadding(0, BarUtils.getStatusBarHeight(), 0, 0)
-        }
-
-    }
 
     override fun onInflateBinding(): ActivityConfigBinding {
         return ActivityConfigBinding.inflate(layoutInflater, null, false)
@@ -80,6 +57,16 @@ class ConfigActivity : BindingActivity<ActivityConfigBinding>() {
         // 设置导航图标（例如返回按钮）
         mBinding.toolbar.setNavigationOnClickListener {
             finish()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            mBinding.root.setOnApplyWindowInsetsListener { view, insets ->
+                LogUtil.d("Display Cutout", "onApplyWindowInsets")
+                // 设置Toolbar的Padding
+                mBinding.toolbar.setPadding(0, insets.systemWindowInsetTop, 0, 0)
+                return@setOnApplyWindowInsetsListener insets
+            }
+        } else {
+            mBinding.toolbar.setPadding(0, BarUtils.getStatusBarHeight(), 0, 0)
         }
         mAdapter = ConfigListAdapter().apply {
             val picFormatList = listOf<String>(

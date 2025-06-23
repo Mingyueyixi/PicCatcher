@@ -13,6 +13,7 @@ class WebViewActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val contentLayout = FrameLayout(this)
+        contentLayout.fitsSystemWindows = true
         setContentView(contentLayout)
 
         val webUrl = intent.getStringExtra("url")
